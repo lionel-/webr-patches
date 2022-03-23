@@ -1,0 +1,242 @@
+From fd5674104a655cbdc8f5136b1d05e55bfbd29cee Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Wed, 23 Mar 2022 13:52:14 +0100
+Subject: [PATCH] Export Fortran functions
+
+---
+ src/appl/dchdc.f  |  2 +-
+ src/appl/dpbfa.f  |  2 +-
+ src/appl/dpbsl.f  |  2 +-
+ src/appl/dpoco.f  |  2 +-
+ src/appl/dpodi.f  |  2 +-
+ src/appl/dpofa.f  |  2 +-
+ src/appl/dposl.f  |  2 +-
+ src/appl/dqrdc.f  |  2 +-
+ src/appl/dqrdc2.f |  2 +-
+ src/appl/dqrls.f  |  1 +
+ src/appl/dqrsl.f  |  1 +
+ src/appl/dqrutl.f | 10 +++++-----
+ src/appl/dsvdc.f  |  2 +-
+ src/appl/dtrco.f  |  2 +-
+ src/appl/dtrsl.f  |  2 +-
+ 15 files changed, 19 insertions(+), 17 deletions(-)
+
+diff --git a/src/appl/dchdc.f b/src/appl/dchdc.f
+index dcd5ab3b2f..4fc5fda7ea 100644
+--- a/src/appl/dchdc.f
++++ b/src/appl/dchdc.f
+@@ -1,4 +1,4 @@
+-      subroutine dchdc(a,lda,p,work,jpvt,job,info)
++      subroutine dchdc(a,lda,p,work,jpvt,job,info) bind(C)
+       integer lda,p,jpvt(p),job,info
+       double precision a(lda,p),work(p)
+ c
+diff --git a/src/appl/dpbfa.f b/src/appl/dpbfa.f
+index 3c22a86094..c997e21d61 100644
+--- a/src/appl/dpbfa.f
++++ b/src/appl/dpbfa.f
+@@ -1,4 +1,4 @@
+-      subroutine dpbfa(abd,lda,n,m,info)
++      subroutine dpbfa(abd,lda,n,m,info) bind(C)
+ 
+       integer lda,n,m,info
+       double precision abd(lda,n)
+diff --git a/src/appl/dpbsl.f b/src/appl/dpbsl.f
+index d910deef88..73a31c1167 100644
+--- a/src/appl/dpbsl.f
++++ b/src/appl/dpbsl.f
+@@ -1,4 +1,4 @@
+-      subroutine dpbsl(abd,lda,n,m,b)
++      subroutine dpbsl(abd,lda,n,m,b) bind(C)
+ 
+       integer lda,n,m
+       double precision abd(lda,n),b(n)
+diff --git a/src/appl/dpoco.f b/src/appl/dpoco.f
+index 7cf7902593..022a1d3c56 100644
+--- a/src/appl/dpoco.f
++++ b/src/appl/dpoco.f
+@@ -60,7 +60,7 @@ c     linpack dpofa
+ c     blas daxpy,ddot,dscal,dasum
+ c     fortran dabs,dmax1,dreal,dsign
+ c
+-      subroutine dpoco(a,lda,n,rcond,z,info)
++      subroutine dpoco(a,lda,n,rcond,z,info) bind(C)
+       integer lda,n,info
+       double precision a(lda,n),z(n)
+       double precision rcond
+diff --git a/src/appl/dpodi.f b/src/appl/dpodi.f
+index 99a1968623..afaa3b3dfc 100644
+--- a/src/appl/dpodi.f
++++ b/src/appl/dpodi.f
+@@ -52,7 +52,7 @@ c
+ c     blas daxpy,dscal
+ c     fortran mod
+ c
+-      subroutine dpodi(a,lda,n,det,job)
++      subroutine dpodi(a,lda,n,det,job) bind(C)
+       integer lda,n,job
+       double precision a(lda,n)
+       double precision det(2)
+diff --git a/src/appl/dpofa.f b/src/appl/dpofa.f
+index 2ef7ee41d4..468ab6151f 100644
+--- a/src/appl/dpofa.f
++++ b/src/appl/dpofa.f
+@@ -40,7 +40,7 @@ c
+ c     blas ddot
+ c     fortran dsqrt
+ c
+-      subroutine dpofa(a,lda,n,info)
++      subroutine dpofa(a,lda,n,info) bind(C)
+       integer lda,n,info
+       double precision a(lda,n)
+ c
+diff --git a/src/appl/dposl.f b/src/appl/dposl.f
+index 9bde0c9a43..de40004e49 100644
+--- a/src/appl/dposl.f
++++ b/src/appl/dposl.f
+@@ -44,7 +44,7 @@ c     subroutines and functions
+ c
+ c     blas daxpy,ddot
+ c
+-      subroutine dposl(a,lda,n,b)
++      subroutine dposl(a,lda,n,b) bind(C)
+       integer lda,n
+       double precision a(lda,n),b(n)
+ c
+diff --git a/src/appl/dqrdc.f b/src/appl/dqrdc.f
+index f11aa55fa0..6f9ef5f516 100644
+--- a/src/appl/dqrdc.f
++++ b/src/appl/dqrdc.f
+@@ -78,7 +78,7 @@ c
+ c     blas daxpy,ddot,dscal,dswap,dnrm2
+ c     fortran dabs,dmax1,min0,dsqrt
+ c
+-      subroutine dqrdc(x,ldx,n,p,qraux,jpvt,work,job)
++      subroutine dqrdc(x,ldx,n,p,qraux,jpvt,work,job) bind(C)
+       integer ldx,n,p,job
+       integer jpvt(p)
+       double precision x(ldx,p),qraux(p),work(p)
+diff --git a/src/appl/dqrdc2.f b/src/appl/dqrdc2.f
+index c918bb7860..8711932468 100644
+--- a/src/appl/dqrdc2.f
++++ b/src/appl/dqrdc2.f
+@@ -82,7 +82,7 @@ c
+ c     blas daxpy,ddot,dscal,dnrm2
+ c     fortran dabs,dmax1,min0,dsqrt
+ c
+-      subroutine dqrdc2(x,ldx,n,p,tol,k,qraux,jpvt,work)
++      subroutine dqrdc2(x,ldx,n,p,tol,k,qraux,jpvt,work) bind(C)
+       integer ldx,n,p
+       integer jpvt(p)
+       double precision x(ldx,p),qraux(p),work(p,2),tol
+diff --git a/src/appl/dqrls.f b/src/appl/dqrls.f
+index 2da2dff4c8..791bf94192 100644
+--- a/src/appl/dqrls.f
++++ b/src/appl/dqrls.f
+@@ -80,6 +80,7 @@ c
+ c     dqrfit uses the linpack routines dqrdc and dqrsl.
+ c
+       subroutine dqrls(x,n,p,y,ny,tol,b,rsd,qty,k,jpvt,qraux,work)
++     $           bind(C)
+       integer n,p,ny,k,jpvt(p)
+       double precision x(n,p),y(n,ny),tol,b(p,ny),rsd(n,ny),
+      .                 qty(n,ny),qraux(p),work(2*p)
+diff --git a/src/appl/dqrsl.f b/src/appl/dqrsl.f
+index 3c7ac53a6f..932df2c189 100644
+--- a/src/appl/dqrsl.f
++++ b/src/appl/dqrsl.f
+@@ -138,6 +138,7 @@ c     BLAS      daxpy,dcopy,ddot
+ c     Fortran   dabs,min0,mod
+ c
+       subroutine dqrsl(x,ldx,n,k,qraux,y,qy,qty,b,rsd,xb,job,info)
++     $ 		 bind(C)
+       integer ldx,n,k,job,info
+       double precision x(ldx,k),qraux(k),y(n),qy(n),qty(n),b(k),rsd(n),
+      *                 xb(n)
+diff --git a/src/appl/dqrutl.f b/src/appl/dqrutl.f
+index 2d208ca0d8..47f1172946 100644
+--- a/src/appl/dqrutl.f
++++ b/src/appl/dqrutl.f
+@@ -1,6 +1,6 @@
+ c dqr Utilities:  Interface to the different "switches" of  dqrsl().
+ c
+-      subroutine dqrqty(x, n, k, qraux, y, ny, qty)
++      subroutine dqrqty(x, n, k, qraux, y, ny, qty) bind(C)
+ 
+       integer n, k, ny
+       double precision x(n,k), qraux(k), y(n,ny), qty(n,ny)
+@@ -13,7 +13,7 @@ c
+       return
+       end
+ c
+-      subroutine dqrqy(x, n, k, qraux, y, ny, qy)
++      subroutine dqrqy(x, n, k, qraux, y, ny, qy) bind(C)
+ 
+       integer n, k, ny
+       double precision x(n,k), qraux(k), y(n,ny), qy(n,ny)
+@@ -26,7 +26,7 @@ c
+       return
+       end
+ c
+-      subroutine dqrcf(x, n, k, qraux, y, ny, b, info)
++      subroutine dqrcf(x, n, k, qraux, y, ny, b, info) bind(C)
+ 
+       integer n, k, ny, info
+       double precision x(n,k), qraux(k), y(n,ny), b(k,ny)
+@@ -39,7 +39,7 @@ c
+       return
+       end
+ c
+-      subroutine dqrrsd(x, n, k, qraux, y, ny, rsd)
++      subroutine dqrrsd(x, n, k, qraux, y, ny, rsd) bind(C)
+ 
+       integer n, k, ny
+       double precision x(n,k), qraux(k), y(n,ny), rsd(n,ny)
+@@ -52,7 +52,7 @@ c
+       return
+       end
+ c
+-      subroutine dqrxb(x, n, k, qraux, y, ny, xb)
++      subroutine dqrxb(x, n, k, qraux, y, ny, xb) bind(C)
+ 
+       integer n, k, ny
+       double precision x(n,k), qraux(k), y(n,ny), xb(n,ny)
+diff --git a/src/appl/dsvdc.f b/src/appl/dsvdc.f
+index 8e24cc2643..6bf21c67d3 100644
+--- a/src/appl/dsvdc.f
++++ b/src/appl/dsvdc.f
+@@ -102,7 +102,7 @@ c     external drot
+ c     blas daxpy,ddot,dscal,dswap,dnrm2,drotg
+ c     fortran dabs,dmax1,max0,min0,mod,dsqrt
+ c
+-      subroutine dsvdc(x,ldx,n,p,s,e,u,ldu,v,ldv,work,job,info)
++      subroutine dsvdc(x,ldx,n,p,s,e,u,ldu,v,ldv,work,job,info) bind(C)
+       integer ldx,n,p,ldu,ldv,job,info
+       double precision x(ldx,p),s(min(n+1,p)),e(p),
+      + u(ldu,n),v(ldv,p),work(n)
+diff --git a/src/appl/dtrco.f b/src/appl/dtrco.f
+index 48f9e786d3..12d1ae5882 100644
+--- a/src/appl/dtrco.f
++++ b/src/appl/dtrco.f
+@@ -1,4 +1,4 @@
+-      subroutine dtrco(t,ldt,n,rcond,z,job)
++      subroutine dtrco(t,ldt,n,rcond,z,job) bind(C)
+       integer ldt,n,job
+       double precision t(ldt,n),z(n)
+       double precision rcond
+diff --git a/src/appl/dtrsl.f b/src/appl/dtrsl.f
+index 691d88d2d0..e5d44f6f66 100644
+--- a/src/appl/dtrsl.f
++++ b/src/appl/dtrsl.f
+@@ -58,7 +58,7 @@ c
+ c     blas:     daxpy,ddot
+ c     fortran   mod
+ c
+-      subroutine dtrsl(t,ldt,n,b,job,info)
++      subroutine dtrsl(t,ldt,n,b,job,info) bind(C)
+       integer ldt,n,job,info
+       double precision t(ldt,n),b(n)
+ c
+-- 
+2.31.0
+
