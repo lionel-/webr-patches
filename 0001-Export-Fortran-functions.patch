@@ -1,4 +1,4 @@
-From a409b26a495d7505e1660fc194cb0c30127182e3 Mon Sep 17 00:00:00 2001
+From ba3b743a46d412930445bb90751bf070248692a4 Mon Sep 17 00:00:00 2001
 From: Lionel Henry <lionel.hry@gmail.com>
 Date: Wed, 23 Mar 2022 13:52:14 +0100
 Subject: [PATCH] Export Fortran functions
@@ -15,12 +15,22 @@ Subject: [PATCH] Export Fortran functions
  src/appl/dqrdc2.f              |  2 +-
  src/appl/dqrls.f               |  1 +
  src/appl/dqrsl.f               |  1 +
- src/appl/dqrutl.f              | 10 +++---
+ src/appl/dqrutl.f              | 10 ++---
  src/appl/dsvdc.f               |  2 +-
  src/appl/dtrco.f               |  2 +-
  src/appl/dtrsl.f               |  2 +-
- src/library/stats/src/loessf.f | 57 ++++++++++++++++++----------------
- 16 files changed, 49 insertions(+), 44 deletions(-)
+ src/extra/blas/blas.f          | 68 ++++++++++++++++++----------------
+ src/extra/blas/cmplxblas.f     | 53 ++++++++++++++------------
+ src/library/stats/src/bvalus.f |  2 +-
+ src/library/stats/src/eureka.f |  2 +-
+ src/library/stats/src/hclust.f |  3 +-
+ src/library/stats/src/kmns.f   |  2 +-
+ src/library/stats/src/loessf.f | 53 +++++++++++++-------------
+ src/library/stats/src/ppr.f    | 23 ++++++++++--
+ src/library/stats/src/qsbart.f |  2 +-
+ src/library/stats/src/stl.f    |  1 +
+ src/modules/lapack/dlapack.f   |  2 +-
+ 26 files changed, 139 insertions(+), 108 deletions(-)
 
 diff --git a/src/appl/dchdc.f b/src/appl/dchdc.f
 index dcd5ab3b2f..4fc5fda7ea 100644
@@ -238,8 +248,646 @@ index 691d88d2d0..e5d44f6f66 100644
        integer ldt,n,job,info
        double precision t(ldt,n),b(n)
  c
+diff --git a/src/extra/blas/blas.f b/src/extra/blas/blas.f
+index 7c6d70e979..8eecf51ac2 100644
+--- a/src/extra/blas/blas.f
++++ b/src/extra/blas/blas.f
+@@ -1,4 +1,4 @@
+-      double precision function dasum(n,dx,incx)
++      double precision function dasum(n,dx,incx) bind(C)
+ c
+ c     takes the sum of the absolute values.
+ c     jack dongarra, linpack, 3/11/78.
+@@ -41,7 +41,7 @@ c
+    60 dasum = dtemp
+       return
+       end
+-      subroutine daxpy(n,da,dx,incx,dy,incy)
++      subroutine daxpy(n,da,dx,incx,dy,incy) bind(C)
+ c
+ c     constant times a vector plus a vector.
+ c     uses unrolled loops for increments equal to one.
+@@ -89,7 +89,7 @@ c
+    50 continue
+       return
+       end
+-      subroutine  dcopy(n,dx,incx,dy,incy)
++      subroutine  dcopy(n,dx,incx,dy,incy) bind(C)
+ c
+ c     copies a vector, x, to a vector, y.
+ c     uses unrolled loops for increments equal to one.
+@@ -139,7 +139,7 @@ c
+    50 continue
+       return
+       end
+-      double precision function ddot(n,dx,incx,dy,incy)
++      double precision function ddot(n,dx,incx,dy,incy) bind(C)
+ c
+ c     forms the dot product of two vectors.
+ c     uses unrolled loops for increments equal to one.
+@@ -189,7 +189,7 @@ c
+       return
+       end
+       SUBROUTINE DGBMV ( TRANS, M, N, KL, KU, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, KL, KU, LDA, M, N
+@@ -489,7 +489,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE DGEMM ( TRANSA, TRANSB, M, N, K, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          TRANSA, TRANSB
+       INTEGER            M, N, K, LDA, LDB, LDC
+@@ -802,7 +802,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE DGEMV ( TRANS, M, N, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -1062,7 +1062,7 @@ c               END IF
+ *     End of DGEMV .
+ *
+       END
+-      SUBROUTINE DGER  ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++      SUBROUTINE DGER  ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -1219,7 +1219,7 @@ c               END IF
+ *     End of DGER  .
+ *
+       END
+-      DOUBLE PRECISION FUNCTION DNRM2 ( N, X, INCX )
++      DOUBLE PRECISION FUNCTION DNRM2 ( N, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER                           INCX, N
+ *     .. Array Arguments ..
+@@ -1279,7 +1279,7 @@ c               END IF
+ *     End of DNRM2.
+ *
+       END
+-      subroutine  drot (n,dx,incx,dy,incy,c,s)
++      subroutine  drot (n,dx,incx,dy,incy,c,s) bind(C)
+ c
+ c     applies a plane rotation.
+ c     jack dongarra, linpack, 3/11/78.
+@@ -1316,7 +1316,7 @@ c
+    30 continue
+       return
+       end
+-      subroutine drotg(da,db,c,s)
++      subroutine drotg(da,db,c,s) bind(C)
+ c
+ c     construct givens plane rotation.
+ c     jack dongarra, linpack, 3/11/78.
+@@ -1344,7 +1344,7 @@ c
+       return
+       end
+ 
+-      SUBROUTINE DROTM (N,DX,INCX,DY,INCY,DPARAM)
++      SUBROUTINE DROTM (N,DX,INCX,DY,INCY,DPARAM) BIND(C)
+ C
+ C     APPLY THE MODIFIED GIVENS TRANSFORMATION, H, TO THE 2 BY N MATRIX
+ C
+@@ -1456,7 +1456,7 @@ C          IF(DFLAG)120,80,100
+   140     CONTINUE
+           RETURN
+           END
+-      SUBROUTINE DROTMG (DD1,DD2,DX1,DY1,DPARAM)
++      SUBROUTINE DROTMG (DD1,DD2,DX1,DY1,DPARAM) BIND(C)
+ C
+ C     CONSTRUCT THE MODIFIED GIVENS TRANSFORMATION MATRIX H WHICH ZEROS
+ C     THE SECOND COMPONENT OF THE 2-VECTOR  (DSQRT(DD1)*DX1,DSQRT(DD2)*
+@@ -1634,7 +1634,7 @@ C          IF(DFLAG)250,230,240
+           RETURN
+       END
+       SUBROUTINE DSBMV ( UPLO, N, K, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, K, LDA, N
+@@ -1936,7 +1936,7 @@ C          IF(DFLAG)250,230,240
+ *     End of DSBMV .
+ *
+       END
+-      subroutine  dscal(n,da,dx,incx)
++      subroutine  dscal(n,da,dx,incx) bind(C)
+ c
+ c     scales a vector by a constant.
+ c     uses unrolled loops for increment equal to one.
+@@ -1980,7 +1980,7 @@ c
+       return
+       end
+ *DECK DSDOT
+-      DOUBLE PRECISION FUNCTION DSDOT (N, SX, INCX, SY, INCY)
++      DOUBLE PRECISION FUNCTION DSDOT (N, SX, INCX, SY, INCY) BIND(C)
+ C***BEGIN PROLOGUE  DSDOT
+ C***PURPOSE  Compute the inner product of two vectors with extended
+ C            precision accumulation and result.
+@@ -2058,6 +2058,7 @@ C
+       RETURN
+       END
+       SUBROUTINE DSPMV ( UPLO, N, ALPHA, AP, X, INCX, BETA, Y, INCY )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, N
+@@ -2319,7 +2320,7 @@ C
+ *     End of DSPMV .
+ *
+       END
+-      SUBROUTINE DSPR  ( UPLO, N, ALPHA, X, INCX, AP )
++      SUBROUTINE DSPR  ( UPLO, N, ALPHA, X, INCX, AP ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, N
+@@ -2517,7 +2518,7 @@ C
+ *     End of DSPR  .
+ *
+       END
+-      SUBROUTINE DSPR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP )
++      SUBROUTINE DSPR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, INCY, N
+@@ -2746,7 +2747,7 @@ C
+ *     End of DSPR2 .
+ *
+       END
+-      subroutine  dswap (n,dx,incx,dy,incy)
++      subroutine  dswap (n,dx,incx,dy,incy) bind(C)
+ c
+ c     interchanges two vectors.
+ c     uses unrolled loops for increments equal one.
+@@ -2803,7 +2804,7 @@ c
+       return
+       end
+       SUBROUTINE DSYMM ( SIDE, UPLO, M, N, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO
+       INTEGER            M, N, LDA, LDB, LDC
+@@ -3097,7 +3098,7 @@ c
+ *
+       END
+       SUBROUTINE DSYMV ( UPLO, N, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, LDA, N
+@@ -3358,7 +3359,7 @@ c
+ *     End of DSYMV .
+ *
+       END
+-      SUBROUTINE DSYR  ( UPLO, N, ALPHA, X, INCX, A, LDA )
++      SUBROUTINE DSYR  ( UPLO, N, ALPHA, X, INCX, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, LDA, N
+@@ -3556,6 +3557,7 @@ c
+ *
+       END
+       SUBROUTINE DSYR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, INCY, LDA, N
+@@ -3786,7 +3788,7 @@ c
+ *
+       END
+       SUBROUTINE DSYR2K( UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          UPLO, TRANS
+       INTEGER            N, K, LDA, LDB, LDC
+@@ -4113,7 +4115,7 @@ c
+ *
+       END
+       SUBROUTINE DSYRK ( UPLO, TRANS, N, K, ALPHA, A, LDA,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          UPLO, TRANS
+       INTEGER            N, K, LDA, LDC
+@@ -4407,6 +4409,7 @@ c
+ *
+       END
+       SUBROUTINE DTBMV ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, K, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -4749,6 +4752,7 @@ c
+ *
+       END
+       SUBROUTINE DTBSV ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, K, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -5094,7 +5098,7 @@ c
+ *     End of DTBSV .
+ *
+       END
+-      SUBROUTINE DTPMV ( UPLO, TRANS, DIAG, N, AP, X, INCX )
++      SUBROUTINE DTPMV ( UPLO, TRANS, DIAG, N, AP, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -5393,7 +5397,7 @@ c
+ *     End of DTPMV .
+ *
+       END
+-      SUBROUTINE DTPSV ( UPLO, TRANS, DIAG, N, AP, X, INCX )
++      SUBROUTINE DTPSV ( UPLO, TRANS, DIAG, N, AP, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -5696,7 +5700,7 @@ c
+ *
+       END
+       SUBROUTINE DTRMM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA,
+-     $                   B, LDB )
++     $                   B, LDB ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO, TRANSA, DIAG
+       INTEGER            M, N, LDA, LDB
+@@ -6050,7 +6054,7 @@ c
+ *     End of DTRMM .
+ *
+       END
+-      SUBROUTINE DTRMV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
++      SUBROUTINE DTRMV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -6337,7 +6341,7 @@ c
+ *
+       END
+       SUBROUTINE DTRSM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA,
+-     $                   B, LDB )
++     $                   B, LDB ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO, TRANSA, DIAG
+       INTEGER            M, N, LDA, LDB
+@@ -6714,7 +6718,7 @@ c
+ *     End of DTRSM .
+ *
+       END
+-      SUBROUTINE DTRSV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
++      SUBROUTINE DTRSV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -7003,7 +7007,7 @@ c
+ *     End of DTRSV .
+ *
+       END
+-      integer function idamax(n,dx,incx)
++      integer function idamax(n,dx,incx) bind(C)
+ c
+ c     finds the index of element having max. absolute value.
+ c     jack dongarra, linpack, 3/11/78.
+@@ -7042,7 +7046,7 @@ c
+    30 continue
+       return
+       end
+-      LOGICAL          FUNCTION LSAME( CA, CB )
++      LOGICAL          FUNCTION LSAME( CA, CB ) BIND(C)
+ *
+ *  -- LAPACK auxiliary routine (version 2.0) --
+ *     Univ. of Tennessee, Univ. of California Berkeley, NAG Ltd.,
+diff --git a/src/extra/blas/cmplxblas.f b/src/extra/blas/cmplxblas.f
+index b9458d4baf..d1c0f292e1 100644
+--- a/src/extra/blas/cmplxblas.f
++++ b/src/extra/blas/cmplxblas.f
+@@ -148,7 +148,7 @@ c
+    30 continue
+       return
+       end
+-      subroutine zaxpy(n,za,zx,incx,zy,incy)
++      subroutine zaxpy(n,za,zx,incx,zy,incy) bind(C)
+ c
+ c     constant times a vector plus a vector.
+ c     jack dongarra, 3/11/78.
+@@ -182,7 +182,7 @@ c
+    30 continue
+       return
+       end
+-      subroutine  zcopy(n,zx,incx,zy,incy)
++      subroutine  zcopy(n,zx,incx,zy,incy) bind(C)
+ c
+ c     copies a vector, x, to a vector, y.
+ c     jack dongarra, linpack, 4/11/78.
+@@ -288,7 +288,7 @@ c
+       zdotu = ztemp
+       return
+       end
+-      subroutine  zdscal(n,da,zx,incx)
++      subroutine  zdscal(n,da,zx,incx) bind(C)
+ c
+ c     scales a vector by a constant.
+ c     jack dongarra, 3/11/78.
+@@ -320,7 +320,7 @@ c
+       return
+       end
+       SUBROUTINE ZGEMV ( TRANS, M, N, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -600,7 +600,7 @@ c               END IF
+ *     End of ZGEMV .
+ *
+       END
+-      SUBROUTINE ZGERC ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++      SUBROUTINE ZGERC ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -758,7 +758,7 @@ c            END IF
+ *
+       END
+       SUBROUTINE ZHEMV ( UPLO, N, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, LDA, N
+@@ -1024,6 +1024,7 @@ c            END IF
+ *
+       END
+       SUBROUTINE ZHER2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA
+       INTEGER            INCX, INCY, LDA, N
+@@ -1273,7 +1274,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE ZHER2K( UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA,
+-     $                   C, LDC )
++     $                   C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          TRANS, UPLO
+       INTEGER            K, LDA, LDB, LDC, N
+@@ -1710,7 +1711,7 @@ c       code for both increments equal to 1
+       return
+       end
+       SUBROUTINE ZTRMM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA,
+-     $                   B, LDB )
++     $                   B, LDB ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO, TRANSA, DIAG
+       INTEGER            M, N, LDA, LDB
+@@ -2101,7 +2102,7 @@ c                     END IF
+ *     End of ZTRMM .
+ *
+       END
+-      SUBROUTINE ZTRMV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
++      SUBROUTINE ZTRMV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -2423,7 +2424,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZTRSM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA,
+-     $                   B, LDB )
++     $                   B, LDB ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO, TRANSA, DIAG
+       INTEGER            M, N, LDA, LDB
+@@ -2836,7 +2837,7 @@ c                     END IF
+ *     End of ZTRSM .
+ *
+       END
+-      SUBROUTINE ZTRSV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
++      SUBROUTINE ZTRSV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -3199,7 +3200,7 @@ c
+       return
+       end
+       SUBROUTINE ZGBMV ( TRANS, M, N, KL, KU, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, KL, KU, LDA, M, N
+@@ -3520,7 +3521,7 @@ c               END IF
+ *     End of ZGBMV .
+ *
+       END
+-      SUBROUTINE ZGERU ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++      SUBROUTINE ZGERU ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -3678,7 +3679,7 @@ c            END IF
+ *
+       END
+       SUBROUTINE ZHBMV ( UPLO, N, K, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, K, LDA, N
+@@ -3987,7 +3988,7 @@ c            END IF
+ *
+       END
+       SUBROUTINE ZHEMM ( SIDE, UPLO, M, N, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO
+       INTEGER            M, N, LDA, LDB, LDC
+@@ -4290,7 +4291,7 @@ c            END IF
+ *     End of ZHEMM .
+ *
+       END
+-      SUBROUTINE ZHER  ( UPLO, N, ALPHA, X, INCX, A, LDA )
++      SUBROUTINE ZHER  ( UPLO, N, ALPHA, X, INCX, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, LDA, N
+@@ -4503,6 +4504,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE ZHERK( UPLO, TRANS, N, K, ALPHA, A, LDA, BETA, C, LDC )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          TRANS, UPLO
+       INTEGER            K, LDA, LDC, N
+@@ -4833,6 +4835,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE ZHPMV ( UPLO, N, ALPHA, AP, X, INCX, BETA, Y, INCY )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, N
+@@ -5102,7 +5105,7 @@ c               END IF
+ *     End of ZHPMV .
+ *
+       END
+-      SUBROUTINE ZHPR  ( UPLO, N, ALPHA, X, INCX, AP )
++      SUBROUTINE ZHPR  ( UPLO, N, ALPHA, X, INCX, AP ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, N
+@@ -5319,7 +5322,7 @@ c               END IF
+ *     End of ZHPR  .
+ *
+       END
+-      SUBROUTINE ZHPR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP )
++      SUBROUTINE ZHPR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA
+       INTEGER            INCX, INCY, N
+@@ -5593,7 +5596,7 @@ c               END IF
+       return
+       end
+       SUBROUTINE ZSYMM ( SIDE, UPLO, M, N, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO
+       INTEGER            M, N, LDA, LDB, LDC
+@@ -5889,7 +5892,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE ZSYR2K( UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          UPLO, TRANS
+       INTEGER            N, K, LDA, LDB, LDC
+@@ -6213,7 +6216,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZSYRK ( UPLO, TRANS, N, K, ALPHA, A, LDA,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          UPLO, TRANS
+       INTEGER            N, K, LDA, LDC
+@@ -6506,6 +6509,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZTBMV ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, K, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -6883,6 +6887,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZTBSV ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, K, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -7263,7 +7268,7 @@ c                  END IF
+ *     End of ZTBSV .
+ *
+       END
+-      SUBROUTINE ZTPMV ( UPLO, TRANS, DIAG, N, AP, X, INCX )
++      SUBROUTINE ZTPMV ( UPLO, TRANS, DIAG, N, AP, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -7601,7 +7606,7 @@ c                  END IF
+ *     End of ZTPMV .
+ *
+       END
+-      SUBROUTINE ZTPSV ( UPLO, TRANS, DIAG, N, AP, X, INCX )
++      SUBROUTINE ZTPSV ( UPLO, TRANS, DIAG, N, AP, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -7943,7 +7948,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZGEMM ( TRANSA, TRANSB, M, N, K, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          TRANSA, TRANSB
+       INTEGER            M, N, K, LDA, LDB, LDC
+diff --git a/src/library/stats/src/bvalus.f b/src/library/stats/src/bvalus.f
+index 1dd84f856e..977c2c561b 100644
+--- a/src/library/stats/src/bvalus.f
++++ b/src/library/stats/src/bvalus.f
+@@ -1,4 +1,4 @@
+-      subroutine bvalus(n,knot,coef,nk,x,s,order)
++      subroutine bvalus(n,knot,coef,nk,x,s,order) bind(C)
+ C Args
+       integer n, nk, order
+       double precision knot(*),coef(*),x(*),s(*)
+diff --git a/src/library/stats/src/eureka.f b/src/library/stats/src/eureka.f
+index 8397d8e686..cd9a36b46f 100644
+--- a/src/library/stats/src/eureka.f
++++ b/src/library/stats/src/eureka.f
+@@ -20,7 +20,7 @@ c  https://www.R-project.org/Licenses/
+ c
+ c-----------------------------------------------------------------------
+ c
+-      subroutine eureka (lr,r,g,f,var,a)
++      subroutine eureka (lr,r,g,f,var,a) bind(C)
+ c
+ c      solves Toeplitz matrix equation toep(r)f=g(1+.)
+ c      by Levinson's algorithm
+diff --git a/src/library/stats/src/hclust.f b/src/library/stats/src/hclust.f
+index 807ecf4262..3e3ed7d15c 100644
+--- a/src/library/stats/src/hclust.f
++++ b/src/library/stats/src/hclust.f
+@@ -32,6 +32,7 @@ C  FLAG not passed as arg to avoid possible                  C
+ C     C/Fortran inconsistency, May 2019                      C
+ C------------------------------------------------------------C
+       SUBROUTINE HCLUST(N,LEN,IOPT,IA,IB,CRIT,MEMBR,NN,DISNN, DISS)
++     $           BIND(C)
+ c Args
+       INTEGER N, LEN, IOPT
+       INTEGER IA(N),IB(N), NN(N)
+@@ -254,7 +255,7 @@ C  Adapted from routine HCASS, which additionally determines    C
+ C   cluster assignments at all levels, at extra comput. expense C
+ C                                                               C
+ C---------------------------------------------------------------C
+-      SUBROUTINE HCASS2(N,IA,IB,IORDER,IIA,IIB)
++      SUBROUTINE HCASS2(N,IA,IB,IORDER,IIA,IIB) BIND(C)
+ c Args
+       INTEGER N,IA(N),IB(N),IORDER(N),IIA(N),IIB(N)
+ c Var
+diff --git a/src/library/stats/src/kmns.f b/src/library/stats/src/kmns.f
+index 75e4da2716..ab551c5404 100644
+--- a/src/library/stats/src/kmns.f
++++ b/src/library/stats/src/kmns.f
+@@ -9,7 +9,7 @@ C
+ c ~= R's  kmeans(x=A, centers=C, iter.max=ITER, algorithm = "Hartigan-Wong")
+ C
+       SUBROUTINE KMNS(A, M, N, C, K, IC1, IC2, NC, AN1, AN2, NCP, D,
+-     *    ITRAN, LIVE, ITER, WSS, IFAULT)
++     *    ITRAN, LIVE, ITER, WSS, IFAULT) BIND(C)
+ C
+ C     ALGORITHM AS 136  APPL. STATIST. (1979) VOL.28, NO.1
+ C
 diff --git a/src/library/stats/src/loessf.f b/src/library/stats/src/loessf.f
-index 4cbd348fd3..6f8767178c 100644
+index 4cbd348fd3..7a245fc2d8 100644
 --- a/src/library/stats/src/loessf.f
 +++ b/src/library/stats/src/loessf.f
 @@ -23,7 +23,7 @@ C       by M. Maechler, renaming ehg182() to loesswarn()
@@ -490,22 +1138,113 @@ index 4cbd348fd3..6f8767178c 100644
        integer d,nleaf
        integer leaf(256),a(ncmax),hi(ncmax),lo(ncmax),pstack(20)
        DOUBLE PRECISION z(d),xi(ncmax)
-@@ -2049,13 +2052,13 @@ c     bottom of while loop
+diff --git a/src/library/stats/src/ppr.f b/src/library/stats/src/ppr.f
+index a43173e1e2..69fcd5795a 100644
+--- a/src/library/stats/src/ppr.f
++++ b/src/library/stats/src/ppr.f
+@@ -7,7 +7,7 @@ C     B.D. Ripley (ripley@stats.ox.ac.uk)  1994-7.
+ C
+ C
+       subroutine smart(m,mu,p,q,n, w,x,y,ww,smod,nsmod,
+-     &     sp,nsp,dp,ndp,edf)
++     &     sp,nsp,dp,ndp,edf) bind(C)
+ 
+       integer m,mu,p,q,n, nsmod, nsp,ndp
+       double precision x(p,n),y(q,n),w(n),ww(q),smod(nsmod),
+@@ -339,6 +339,20 @@ C REPEAT
        end
  
- C-- For Error messaging, call the "a" routines at the bottom of  ./loessc.c  :
--      subroutine ehg183(s, i, n, inc)
-+      subroutine ehg183(s, i, n, inc) bind(C)
-       character s*(*)
-       integer i, n, inc
-       call ehg183a(s, len(s), i, n, inc)
+       subroutine oneone(ist,p,n, w,sw,y,x,a,f,t,asr,sc,g,dp,edf)
++      interface
++          subroutine supsmu (n,x,y,w,iper,span,alpha,smo,sc,edf)
++              integer :: n
++              double precision :: x (n)
++              double precision :: y (n)
++              double precision :: w (n)
++              integer :: iper
++              double precision :: span
++              double precision :: alpha
++              double precision :: smo (n)
++              double precision :: sc (n,7)
++              double precision :: edf
++          end subroutine
++       end interface
+ c Args
+       integer           ist,p,n
+       double precision w(n),sw,y(n),x(p,n),a(p),f(n),t(n),asr,
+@@ -842,6 +856,7 @@ c Common Vars
        end
  
--      subroutine ehg184(s, x, n, inc)
-+      subroutine ehg184(s, x, n, inc) bind(C)
-       character s*(*)
-       double precision x
-       integer n, inc
+       subroutine setppr(span1, alpha1, optlevel, ism, df1, gcvpen1)
++     &     bind(C)
+ c Put 'parameters' into Common blocks
+       integer optlevel,ism
+       double precision span1,alpha1, df1, gcvpen1
+@@ -891,7 +906,7 @@ c
+       return
+       end
+ 
+-      subroutine pppred(np,x,smod,y,sc)
++      subroutine pppred(np,x,smod,y,sc) bind(C)
+ 
+       integer np
+       double precision x(np,*),y(np,*),smod(*), sc(*)
+@@ -974,7 +989,7 @@ C        END
+       end
+ 
+ c Called from R's supsmu()
+-      subroutine setsmu (tr)
++      subroutine setsmu (tr) bind(C)
+       integer tr
+ 
+       double precision  df, gcvpen
+@@ -987,7 +1002,7 @@ c Called from R's supsmu()
+       return
+       end
+ 
+-      subroutine supsmu (n,x,y,w,iper,span,alpha,smo,sc,edf)
++      subroutine supsmu (n,x,y,w,iper,span,alpha,smo,sc,edf) bind(C)
+ c
+ c------------------------------------------------------------------
+ c
+diff --git a/src/library/stats/src/qsbart.f b/src/library/stats/src/qsbart.f
+index 1631078193..8270a26486 100644
+--- a/src/library/stats/src/qsbart.f
++++ b/src/library/stats/src/qsbart.f
+@@ -30,7 +30,7 @@ C
+       subroutine rbart(penalt,dofoff,xs,ys,ws,ssw,n,knot,nk,
+      &     coef,sz,lev,
+      &     crit,iparms,spar,parms,
+-     &     scrtch, ld4,ldnk,ier)
++     &     scrtch, ld4,ldnk,ier) bind(C)
+ c Args:
+       integer n,nk, iparms(4), ld4,ldnk,ier
+       double precision penalt,dofoff, xs(n),ys(n),ws(n), ssw,
+diff --git a/src/library/stats/src/stl.f b/src/library/stats/src/stl.f
+index 83d99b4589..9a29c86380 100644
+--- a/src/library/stats/src/stl.f
++++ b/src/library/stats/src/stl.f
+@@ -12,6 +12,7 @@ c     (using Emacs), many more comments;  by M.Maechler 2001-02.
+ c
+       subroutine stl(y,n,np,ns,nt,nl, isdeg,itdeg,ildeg,
+      &     nsjump,ntjump,nljump, ni,no, rw,season,trend,work)
++     &     bind(C)
+ 
+ c     implicit none
+ c Arg
+diff --git a/src/modules/lapack/dlapack.f b/src/modules/lapack/dlapack.f
+index 11ee33031a..baae3b49ec 100644
+--- a/src/modules/lapack/dlapack.f
++++ b/src/modules/lapack/dlapack.f
+@@ -165275,7 +165275,7 @@
+ *> \ingroup auxOTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE ILAVER( VERS_MAJOR, VERS_MINOR, VERS_PATCH )
++      SUBROUTINE ILAVER( VERS_MAJOR, VERS_MINOR, VERS_PATCH ) BIND(C)
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
 -- 
 2.31.0
 
