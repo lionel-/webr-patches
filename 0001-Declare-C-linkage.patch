@@ -1,0 +1,4962 @@
+From 3f8518142c41be15e769098c846d52c30d1a11f2 Mon Sep 17 00:00:00 2001
+From: Lionel Henry <lionel.hry@gmail.com>
+Date: Wed, 23 Mar 2022 13:52:14 +0100
+Subject: [PATCH] Declare C linkage
+
+---
+ src/appl/dchdc.f               |   2 +-
+ src/appl/dpbfa.f               |   2 +-
+ src/appl/dpbsl.f               |   2 +-
+ src/appl/dpoco.f               |   2 +-
+ src/appl/dpodi.f               |   2 +-
+ src/appl/dpofa.f               |   2 +-
+ src/appl/dposl.f               |   2 +-
+ src/appl/dqrdc.f               |   2 +-
+ src/appl/dqrdc2.f              |   2 +-
+ src/appl/dqrls.f               |   1 +
+ src/appl/dqrsl.f               |   1 +
+ src/appl/dqrutl.f              |  10 +-
+ src/appl/dsvdc.f               |   2 +-
+ src/appl/dtrco.f               |   2 +-
+ src/appl/dtrsl.f               |   2 +-
+ src/extra/blas/blas.f          | 115 +++---
+ src/extra/blas/cmplxblas.f     | 112 +++---
+ src/library/stats/src/bvalus.f |   2 +-
+ src/library/stats/src/eureka.f |   2 +-
+ src/library/stats/src/hclust.f |   3 +-
+ src/library/stats/src/kmns.f   |   2 +-
+ src/library/stats/src/loessf.f |  53 +--
+ src/library/stats/src/ppr.f    |  23 +-
+ src/library/stats/src/qsbart.f |   2 +-
+ src/library/stats/src/stl.f    |   1 +
+ src/main/xxxpr.f               |  11 +
+ src/modules/lapack/cmplx.f     | 223 ++++--------
+ src/modules/lapack/dlamch.f    |  13 +-
+ src/modules/lapack/dlapack.f   | 631 +++++++++------------------------
+ 29 files changed, 421 insertions(+), 808 deletions(-)
+
+diff --git a/src/appl/dchdc.f b/src/appl/dchdc.f
+index dcd5ab3b2f..4fc5fda7ea 100644
+--- a/src/appl/dchdc.f
++++ b/src/appl/dchdc.f
+@@ -1,4 +1,4 @@
+-      subroutine dchdc(a,lda,p,work,jpvt,job,info)
++      subroutine dchdc(a,lda,p,work,jpvt,job,info) bind(C)
+       integer lda,p,jpvt(p),job,info
+       double precision a(lda,p),work(p)
+ c
+diff --git a/src/appl/dpbfa.f b/src/appl/dpbfa.f
+index 3c22a86094..c997e21d61 100644
+--- a/src/appl/dpbfa.f
++++ b/src/appl/dpbfa.f
+@@ -1,4 +1,4 @@
+-      subroutine dpbfa(abd,lda,n,m,info)
++      subroutine dpbfa(abd,lda,n,m,info) bind(C)
+ 
+       integer lda,n,m,info
+       double precision abd(lda,n)
+diff --git a/src/appl/dpbsl.f b/src/appl/dpbsl.f
+index d910deef88..73a31c1167 100644
+--- a/src/appl/dpbsl.f
++++ b/src/appl/dpbsl.f
+@@ -1,4 +1,4 @@
+-      subroutine dpbsl(abd,lda,n,m,b)
++      subroutine dpbsl(abd,lda,n,m,b) bind(C)
+ 
+       integer lda,n,m
+       double precision abd(lda,n),b(n)
+diff --git a/src/appl/dpoco.f b/src/appl/dpoco.f
+index 7cf7902593..022a1d3c56 100644
+--- a/src/appl/dpoco.f
++++ b/src/appl/dpoco.f
+@@ -60,7 +60,7 @@ c     linpack dpofa
+ c     blas daxpy,ddot,dscal,dasum
+ c     fortran dabs,dmax1,dreal,dsign
+ c
+-      subroutine dpoco(a,lda,n,rcond,z,info)
++      subroutine dpoco(a,lda,n,rcond,z,info) bind(C)
+       integer lda,n,info
+       double precision a(lda,n),z(n)
+       double precision rcond
+diff --git a/src/appl/dpodi.f b/src/appl/dpodi.f
+index 99a1968623..afaa3b3dfc 100644
+--- a/src/appl/dpodi.f
++++ b/src/appl/dpodi.f
+@@ -52,7 +52,7 @@ c
+ c     blas daxpy,dscal
+ c     fortran mod
+ c
+-      subroutine dpodi(a,lda,n,det,job)
++      subroutine dpodi(a,lda,n,det,job) bind(C)
+       integer lda,n,job
+       double precision a(lda,n)
+       double precision det(2)
+diff --git a/src/appl/dpofa.f b/src/appl/dpofa.f
+index 2ef7ee41d4..468ab6151f 100644
+--- a/src/appl/dpofa.f
++++ b/src/appl/dpofa.f
+@@ -40,7 +40,7 @@ c
+ c     blas ddot
+ c     fortran dsqrt
+ c
+-      subroutine dpofa(a,lda,n,info)
++      subroutine dpofa(a,lda,n,info) bind(C)
+       integer lda,n,info
+       double precision a(lda,n)
+ c
+diff --git a/src/appl/dposl.f b/src/appl/dposl.f
+index 9bde0c9a43..de40004e49 100644
+--- a/src/appl/dposl.f
++++ b/src/appl/dposl.f
+@@ -44,7 +44,7 @@ c     subroutines and functions
+ c
+ c     blas daxpy,ddot
+ c
+-      subroutine dposl(a,lda,n,b)
++      subroutine dposl(a,lda,n,b) bind(C)
+       integer lda,n
+       double precision a(lda,n),b(n)
+ c
+diff --git a/src/appl/dqrdc.f b/src/appl/dqrdc.f
+index f11aa55fa0..6f9ef5f516 100644
+--- a/src/appl/dqrdc.f
++++ b/src/appl/dqrdc.f
+@@ -78,7 +78,7 @@ c
+ c     blas daxpy,ddot,dscal,dswap,dnrm2
+ c     fortran dabs,dmax1,min0,dsqrt
+ c
+-      subroutine dqrdc(x,ldx,n,p,qraux,jpvt,work,job)
++      subroutine dqrdc(x,ldx,n,p,qraux,jpvt,work,job) bind(C)
+       integer ldx,n,p,job
+       integer jpvt(p)
+       double precision x(ldx,p),qraux(p),work(p)
+diff --git a/src/appl/dqrdc2.f b/src/appl/dqrdc2.f
+index c918bb7860..8711932468 100644
+--- a/src/appl/dqrdc2.f
++++ b/src/appl/dqrdc2.f
+@@ -82,7 +82,7 @@ c
+ c     blas daxpy,ddot,dscal,dnrm2
+ c     fortran dabs,dmax1,min0,dsqrt
+ c
+-      subroutine dqrdc2(x,ldx,n,p,tol,k,qraux,jpvt,work)
++      subroutine dqrdc2(x,ldx,n,p,tol,k,qraux,jpvt,work) bind(C)
+       integer ldx,n,p
+       integer jpvt(p)
+       double precision x(ldx,p),qraux(p),work(p,2),tol
+diff --git a/src/appl/dqrls.f b/src/appl/dqrls.f
+index 2da2dff4c8..791bf94192 100644
+--- a/src/appl/dqrls.f
++++ b/src/appl/dqrls.f
+@@ -80,6 +80,7 @@ c
+ c     dqrfit uses the linpack routines dqrdc and dqrsl.
+ c
+       subroutine dqrls(x,n,p,y,ny,tol,b,rsd,qty,k,jpvt,qraux,work)
++     $           bind(C)
+       integer n,p,ny,k,jpvt(p)
+       double precision x(n,p),y(n,ny),tol,b(p,ny),rsd(n,ny),
+      .                 qty(n,ny),qraux(p),work(2*p)
+diff --git a/src/appl/dqrsl.f b/src/appl/dqrsl.f
+index 3c7ac53a6f..932df2c189 100644
+--- a/src/appl/dqrsl.f
++++ b/src/appl/dqrsl.f
+@@ -138,6 +138,7 @@ c     BLAS      daxpy,dcopy,ddot
+ c     Fortran   dabs,min0,mod
+ c
+       subroutine dqrsl(x,ldx,n,k,qraux,y,qy,qty,b,rsd,xb,job,info)
++     $ 		 bind(C)
+       integer ldx,n,k,job,info
+       double precision x(ldx,k),qraux(k),y(n),qy(n),qty(n),b(k),rsd(n),
+      *                 xb(n)
+diff --git a/src/appl/dqrutl.f b/src/appl/dqrutl.f
+index 2d208ca0d8..47f1172946 100644
+--- a/src/appl/dqrutl.f
++++ b/src/appl/dqrutl.f
+@@ -1,6 +1,6 @@
+ c dqr Utilities:  Interface to the different "switches" of  dqrsl().
+ c
+-      subroutine dqrqty(x, n, k, qraux, y, ny, qty)
++      subroutine dqrqty(x, n, k, qraux, y, ny, qty) bind(C)
+ 
+       integer n, k, ny
+       double precision x(n,k), qraux(k), y(n,ny), qty(n,ny)
+@@ -13,7 +13,7 @@ c
+       return
+       end
+ c
+-      subroutine dqrqy(x, n, k, qraux, y, ny, qy)
++      subroutine dqrqy(x, n, k, qraux, y, ny, qy) bind(C)
+ 
+       integer n, k, ny
+       double precision x(n,k), qraux(k), y(n,ny), qy(n,ny)
+@@ -26,7 +26,7 @@ c
+       return
+       end
+ c
+-      subroutine dqrcf(x, n, k, qraux, y, ny, b, info)
++      subroutine dqrcf(x, n, k, qraux, y, ny, b, info) bind(C)
+ 
+       integer n, k, ny, info
+       double precision x(n,k), qraux(k), y(n,ny), b(k,ny)
+@@ -39,7 +39,7 @@ c
+       return
+       end
+ c
+-      subroutine dqrrsd(x, n, k, qraux, y, ny, rsd)
++      subroutine dqrrsd(x, n, k, qraux, y, ny, rsd) bind(C)
+ 
+       integer n, k, ny
+       double precision x(n,k), qraux(k), y(n,ny), rsd(n,ny)
+@@ -52,7 +52,7 @@ c
+       return
+       end
+ c
+-      subroutine dqrxb(x, n, k, qraux, y, ny, xb)
++      subroutine dqrxb(x, n, k, qraux, y, ny, xb) bind(C)
+ 
+       integer n, k, ny
+       double precision x(n,k), qraux(k), y(n,ny), xb(n,ny)
+diff --git a/src/appl/dsvdc.f b/src/appl/dsvdc.f
+index 8e24cc2643..6bf21c67d3 100644
+--- a/src/appl/dsvdc.f
++++ b/src/appl/dsvdc.f
+@@ -102,7 +102,7 @@ c     external drot
+ c     blas daxpy,ddot,dscal,dswap,dnrm2,drotg
+ c     fortran dabs,dmax1,max0,min0,mod,dsqrt
+ c
+-      subroutine dsvdc(x,ldx,n,p,s,e,u,ldu,v,ldv,work,job,info)
++      subroutine dsvdc(x,ldx,n,p,s,e,u,ldu,v,ldv,work,job,info) bind(C)
+       integer ldx,n,p,ldu,ldv,job,info
+       double precision x(ldx,p),s(min(n+1,p)),e(p),
+      + u(ldu,n),v(ldv,p),work(n)
+diff --git a/src/appl/dtrco.f b/src/appl/dtrco.f
+index 48f9e786d3..12d1ae5882 100644
+--- a/src/appl/dtrco.f
++++ b/src/appl/dtrco.f
+@@ -1,4 +1,4 @@
+-      subroutine dtrco(t,ldt,n,rcond,z,job)
++      subroutine dtrco(t,ldt,n,rcond,z,job) bind(C)
+       integer ldt,n,job
+       double precision t(ldt,n),z(n)
+       double precision rcond
+diff --git a/src/appl/dtrsl.f b/src/appl/dtrsl.f
+index 691d88d2d0..e5d44f6f66 100644
+--- a/src/appl/dtrsl.f
++++ b/src/appl/dtrsl.f
+@@ -58,7 +58,7 @@ c
+ c     blas:     daxpy,ddot
+ c     fortran   mod
+ c
+-      subroutine dtrsl(t,ldt,n,b,job,info)
++      subroutine dtrsl(t,ldt,n,b,job,info) bind(C)
+       integer ldt,n,job,info
+       double precision t(ldt,n),b(n)
+ c
+diff --git a/src/extra/blas/blas.f b/src/extra/blas/blas.f
+index 7c6d70e979..c59c0ee27d 100644
+--- a/src/extra/blas/blas.f
++++ b/src/extra/blas/blas.f
+@@ -1,4 +1,7 @@
+-      double precision function dasum(n,dx,incx)
++      module blas
++      contains
++
++      double precision function dasum(n,dx,incx) bind(C)
+ c
+ c     takes the sum of the absolute values.
+ c     jack dongarra, linpack, 3/11/78.
+@@ -41,7 +44,7 @@ c
+    60 dasum = dtemp
+       return
+       end
+-      subroutine daxpy(n,da,dx,incx,dy,incy)
++      subroutine daxpy(n,da,dx,incx,dy,incy) bind(C)
+ c
+ c     constant times a vector plus a vector.
+ c     uses unrolled loops for increments equal to one.
+@@ -89,7 +92,7 @@ c
+    50 continue
+       return
+       end
+-      subroutine  dcopy(n,dx,incx,dy,incy)
++      subroutine  dcopy(n,dx,incx,dy,incy) bind(C)
+ c
+ c     copies a vector, x, to a vector, y.
+ c     uses unrolled loops for increments equal to one.
+@@ -139,7 +142,7 @@ c
+    50 continue
+       return
+       end
+-      double precision function ddot(n,dx,incx,dy,incy)
++      double precision function ddot(n,dx,incx,dy,incy) bind(C)
+ c
+ c     forms the dot product of two vectors.
+ c     uses unrolled loops for increments equal to one.
+@@ -189,7 +192,7 @@ c
+       return
+       end
+       SUBROUTINE DGBMV ( TRANS, M, N, KL, KU, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, KL, KU, LDA, M, N
+@@ -322,8 +325,6 @@ c
+       INTEGER            I, INFO, IX, IY, J, JX, JY, K, KUP1, KX, KY,
+      $                   LENX, LENY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -489,7 +490,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE DGEMM ( TRANSA, TRANSB, M, N, K, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          TRANSA, TRANSB
+       INTEGER            M, N, K, LDA, LDB, LDC
+@@ -619,8 +620,6 @@ c               END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -802,7 +801,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE DGEMV ( TRANS, M, N, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -909,8 +908,6 @@ c                  END IF
+       DOUBLE PRECISION   TEMP
+       INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY, LENX, LENY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -1062,7 +1059,7 @@ c               END IF
+ *     End of DGEMV .
+ *
+       END
+-      SUBROUTINE DGER  ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++      SUBROUTINE DGER  ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -1219,7 +1216,7 @@ c               END IF
+ *     End of DGER  .
+ *
+       END
+-      DOUBLE PRECISION FUNCTION DNRM2 ( N, X, INCX )
++      DOUBLE PRECISION FUNCTION DNRM2 ( N, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER                           INCX, N
+ *     .. Array Arguments ..
+@@ -1279,7 +1276,7 @@ c               END IF
+ *     End of DNRM2.
+ *
+       END
+-      subroutine  drot (n,dx,incx,dy,incy,c,s)
++      subroutine  drot (n,dx,incx,dy,incy,c,s) bind(C)
+ c
+ c     applies a plane rotation.
+ c     jack dongarra, linpack, 3/11/78.
+@@ -1316,7 +1313,7 @@ c
+    30 continue
+       return
+       end
+-      subroutine drotg(da,db,c,s)
++      subroutine drotg(da,db,c,s) bind(C)
+ c
+ c     construct givens plane rotation.
+ c     jack dongarra, linpack, 3/11/78.
+@@ -1344,7 +1341,7 @@ c
+       return
+       end
+ 
+-      SUBROUTINE DROTM (N,DX,INCX,DY,INCY,DPARAM)
++      SUBROUTINE DROTM (N,DX,INCX,DY,INCY,DPARAM) BIND(C)
+ C
+ C     APPLY THE MODIFIED GIVENS TRANSFORMATION, H, TO THE 2 BY N MATRIX
+ C
+@@ -1456,7 +1453,7 @@ C          IF(DFLAG)120,80,100
+   140     CONTINUE
+           RETURN
+           END
+-      SUBROUTINE DROTMG (DD1,DD2,DX1,DY1,DPARAM)
++      SUBROUTINE DROTMG (DD1,DD2,DX1,DY1,DPARAM) BIND(C)
+ C
+ C     CONSTRUCT THE MODIFIED GIVENS TRANSFORMATION MATRIX H WHICH ZEROS
+ C     THE SECOND COMPONENT OF THE 2-VECTOR  (DSQRT(DD1)*DX1,DSQRT(DD2)*
+@@ -1634,7 +1631,7 @@ C          IF(DFLAG)250,230,240
+           RETURN
+       END
+       SUBROUTINE DSBMV ( UPLO, N, K, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, K, LDA, N
+@@ -1770,8 +1767,6 @@ C          IF(DFLAG)250,230,240
+       DOUBLE PRECISION   TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, KPLUS1, KX, KY, L
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -1936,7 +1931,7 @@ C          IF(DFLAG)250,230,240
+ *     End of DSBMV .
+ *
+       END
+-      subroutine  dscal(n,da,dx,incx)
++      subroutine  dscal(n,da,dx,incx) bind(C)
+ c
+ c     scales a vector by a constant.
+ c     uses unrolled loops for increment equal to one.
+@@ -1980,7 +1975,7 @@ c
+       return
+       end
+ *DECK DSDOT
+-      DOUBLE PRECISION FUNCTION DSDOT (N, SX, INCX, SY, INCY)
++      DOUBLE PRECISION FUNCTION DSDOT (N, SX, INCX, SY, INCY) BIND(C)
+ C***BEGIN PROLOGUE  DSDOT
+ C***PURPOSE  Compute the inner product of two vectors with extended
+ C            precision accumulation and result.
+@@ -2058,6 +2053,7 @@ C
+       RETURN
+       END
+       SUBROUTINE DSPMV ( UPLO, N, ALPHA, AP, X, INCX, BETA, Y, INCY )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, N
+@@ -2159,8 +2155,6 @@ C
+       DOUBLE PRECISION   TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, K, KK, KX, KY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     ..
+@@ -2319,7 +2313,7 @@ C
+ *     End of DSPMV .
+ *
+       END
+-      SUBROUTINE DSPR  ( UPLO, N, ALPHA, X, INCX, AP )
++      SUBROUTINE DSPR  ( UPLO, N, ALPHA, X, INCX, AP ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, N
+@@ -2408,8 +2402,6 @@ C
+       DOUBLE PRECISION   TEMP
+       INTEGER            I, INFO, IX, J, JX, K, KK, KX
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     ..
+@@ -2517,7 +2509,7 @@ C
+ *     End of DSPR  .
+ *
+       END
+-      SUBROUTINE DSPR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP )
++      SUBROUTINE DSPR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, INCY, N
+@@ -2617,8 +2609,6 @@ C
+       DOUBLE PRECISION   TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, K, KK, KX, KY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     ..
+@@ -2746,7 +2736,7 @@ C
+ *     End of DSPR2 .
+ *
+       END
+-      subroutine  dswap (n,dx,incx,dy,incy)
++      subroutine  dswap (n,dx,incx,dy,incy) bind(C)
+ c
+ c     interchanges two vectors.
+ c     uses unrolled loops for increments equal one.
+@@ -2803,7 +2793,7 @@ c
+       return
+       end
+       SUBROUTINE DSYMM ( SIDE, UPLO, M, N, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO
+       INTEGER            M, N, LDA, LDB, LDC
+@@ -2937,8 +2927,6 @@ c
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -3097,7 +3085,7 @@ c
+ *
+       END
+       SUBROUTINE DSYMV ( UPLO, N, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA, BETA
+       INTEGER            INCX, INCY, LDA, N
+@@ -3202,8 +3190,6 @@ c
+       DOUBLE PRECISION   TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -3358,7 +3344,7 @@ c
+ *     End of DSYMV .
+ *
+       END
+-      SUBROUTINE DSYR  ( UPLO, N, ALPHA, X, INCX, A, LDA )
++      SUBROUTINE DSYR  ( UPLO, N, ALPHA, X, INCX, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, LDA, N
+@@ -3450,8 +3436,6 @@ c
+       DOUBLE PRECISION   TEMP
+       INTEGER            I, INFO, IX, J, JX, KX
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -3556,6 +3540,7 @@ c
+ *
+       END
+       SUBROUTINE DSYR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, INCY, LDA, N
+@@ -3658,8 +3643,6 @@ c
+       DOUBLE PRECISION   TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -3786,7 +3769,7 @@ c
+ *
+       END
+       SUBROUTINE DSYR2K( UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          UPLO, TRANS
+       INTEGER            N, K, LDA, LDB, LDC
+@@ -3923,8 +3906,6 @@ c
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -4113,7 +4094,7 @@ c
+ *
+       END
+       SUBROUTINE DSYRK ( UPLO, TRANS, N, K, ALPHA, A, LDA,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          UPLO, TRANS
+       INTEGER            N, K, LDA, LDC
+@@ -4231,8 +4212,6 @@ c
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -4407,6 +4386,7 @@ c
+ *
+       END
+       SUBROUTINE DTBMV ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, K, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -4550,8 +4530,6 @@ c
+       INTEGER            I, INFO, IX, J, JX, KPLUS1, KX, L
+       LOGICAL            NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -4749,6 +4727,7 @@ c
+ *
+       END
+       SUBROUTINE DTBSV ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, K, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -4896,8 +4875,6 @@ c
+       INTEGER            I, INFO, IX, J, JX, KPLUS1, KX, L
+       LOGICAL            NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -5094,7 +5071,7 @@ c
+ *     End of DTBSV .
+ *
+       END
+-      SUBROUTINE DTPMV ( UPLO, TRANS, DIAG, N, AP, X, INCX )
++      SUBROUTINE DTPMV ( UPLO, TRANS, DIAG, N, AP, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -5198,8 +5175,6 @@ c
+       INTEGER            I, INFO, IX, J, JX, K, KK, KX
+       LOGICAL            NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     ..
+@@ -5393,7 +5368,7 @@ c
+ *     End of DTPMV .
+ *
+       END
+-      SUBROUTINE DTPSV ( UPLO, TRANS, DIAG, N, AP, X, INCX )
++      SUBROUTINE DTPSV ( UPLO, TRANS, DIAG, N, AP, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -5500,8 +5475,6 @@ c
+       INTEGER            I, INFO, IX, J, JX, K, KK, KX
+       LOGICAL            NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     ..
+@@ -5696,7 +5669,7 @@ c
+ *
+       END
+       SUBROUTINE DTRMM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA,
+-     $                   B, LDB )
++     $                   B, LDB ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO, TRANSA, DIAG
+       INTEGER            M, N, LDA, LDB
+@@ -5822,8 +5795,6 @@ c
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -6050,7 +6021,7 @@ c
+ *     End of DTRMM .
+ *
+       END
+-      SUBROUTINE DTRMV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
++      SUBROUTINE DTRMV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -6157,8 +6128,6 @@ c
+       INTEGER            I, INFO, IX, J, JX, KX
+       LOGICAL            NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -6337,7 +6306,7 @@ c
+ *
+       END
+       SUBROUTINE DTRSM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA,
+-     $                   B, LDB )
++     $                   B, LDB ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO, TRANSA, DIAG
+       INTEGER            M, N, LDA, LDB
+@@ -6466,8 +6435,6 @@ c
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -6714,7 +6681,7 @@ c
+ *     End of DTRSM .
+ *
+       END
+-      SUBROUTINE DTRSV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
++      SUBROUTINE DTRSV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -6824,8 +6791,6 @@ c
+       INTEGER            I, INFO, IX, J, JX, KX
+       LOGICAL            NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -7003,7 +6968,7 @@ c
+ *     End of DTRSV .
+ *
+       END
+-      integer function idamax(n,dx,incx)
++      integer function idamax(n,dx,incx) bind(C)
+ c
+ c     finds the index of element having max. absolute value.
+ c     jack dongarra, linpack, 3/11/78.
+@@ -7042,7 +7007,7 @@ c
+    30 continue
+       return
+       end
+-      LOGICAL          FUNCTION LSAME( CA, CB )
++      LOGICAL          FUNCTION LSAME( CA, CB ) BIND(C)
+ *
+ *  -- LAPACK auxiliary routine (version 2.0) --
+ *     Univ. of Tennessee, Univ. of California Berkeley, NAG Ltd.,
+@@ -7129,3 +7094,5 @@ c
+ *     End of LSAME
+ *
+       END
++
++      end module
+diff --git a/src/extra/blas/cmplxblas.f b/src/extra/blas/cmplxblas.f
+index b9458d4baf..45b0f3ec3d 100644
+--- a/src/extra/blas/cmplxblas.f
++++ b/src/extra/blas/cmplxblas.f
+@@ -1,3 +1,12 @@
++      module cmplxblas
++      interface
++         logical          function lsame( ca, cb ) bind(C)
++         character :: ca, cb
++         end function
++      end interface
++
++      contains
++
+       double precision function dcabs1(z)
+       double complex z,zz
+       double precision t(2)
+@@ -148,7 +157,7 @@ c
+    30 continue
+       return
+       end
+-      subroutine zaxpy(n,za,zx,incx,zy,incy)
++      subroutine zaxpy(n,za,zx,incx,zy,incy) bind(C)
+ c
+ c     constant times a vector plus a vector.
+ c     jack dongarra, 3/11/78.
+@@ -182,7 +191,7 @@ c
+    30 continue
+       return
+       end
+-      subroutine  zcopy(n,zx,incx,zy,incy)
++      subroutine  zcopy(n,zx,incx,zy,incy) bind(C)
+ c
+ c     copies a vector, x, to a vector, y.
+ c     jack dongarra, linpack, 4/11/78.
+@@ -288,7 +297,7 @@ c
+       zdotu = ztemp
+       return
+       end
+-      subroutine  zdscal(n,da,zx,incx)
++      subroutine  zdscal(n,da,zx,incx) bind(C)
+ c
+ c     scales a vector by a constant.
+ c     jack dongarra, 3/11/78.
+@@ -320,7 +329,7 @@ c
+       return
+       end
+       SUBROUTINE ZGEMV ( TRANS, M, N, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -432,8 +441,6 @@ c
+       INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY, LENX, LENY
+       LOGICAL            NOCONJ
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -600,7 +607,7 @@ c               END IF
+ *     End of ZGEMV .
+ *
+       END
+-      SUBROUTINE ZGERC ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++      SUBROUTINE ZGERC ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -758,7 +765,7 @@ c            END IF
+ *
+       END
+       SUBROUTINE ZHEMV ( UPLO, N, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, LDA, N
+@@ -867,8 +874,6 @@ c            END IF
+       DOUBLE COMPLEX     TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -1024,6 +1029,7 @@ c            END IF
+ *
+       END
+       SUBROUTINE ZHER2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA
+       INTEGER            INCX, INCY, LDA, N
+@@ -1129,8 +1135,6 @@ c            END IF
+       DOUBLE COMPLEX     TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -1273,7 +1277,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE ZHER2K( UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB, BETA,
+-     $                   C, LDC )
++     $                   C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          TRANS, UPLO
+       INTEGER            K, LDA, LDB, LDC, N
+@@ -1416,8 +1420,6 @@ c               END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -1710,7 +1712,7 @@ c       code for both increments equal to 1
+       return
+       end
+       SUBROUTINE ZTRMM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA,
+-     $                   B, LDB )
++     $                   B, LDB ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO, TRANSA, DIAG
+       INTEGER            M, N, LDA, LDB
+@@ -1836,8 +1838,6 @@ c       code for both increments equal to 1
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -2101,7 +2101,7 @@ c                     END IF
+ *     End of ZTRMM .
+ *
+       END
+-      SUBROUTINE ZTRMV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
++      SUBROUTINE ZTRMV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -2208,8 +2208,6 @@ c                     END IF
+       INTEGER            I, INFO, IX, J, JX, KX
+       LOGICAL            NOCONJ, NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -2423,7 +2421,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZTRSM ( SIDE, UPLO, TRANSA, DIAG, M, N, ALPHA, A, LDA,
+-     $                   B, LDB )
++     $                   B, LDB ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO, TRANSA, DIAG
+       INTEGER            M, N, LDA, LDB
+@@ -2551,8 +2549,6 @@ c                  END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -2836,7 +2832,7 @@ c                     END IF
+ *     End of ZTRSM .
+ *
+       END
+-      SUBROUTINE ZTRSV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX )
++      SUBROUTINE ZTRSV ( UPLO, TRANS, DIAG, N, A, LDA, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -2946,8 +2942,6 @@ c                     END IF
+       INTEGER            I, INFO, IX, J, JX, KX
+       LOGICAL            NOCONJ, NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -3199,7 +3193,7 @@ c
+       return
+       end
+       SUBROUTINE ZGBMV ( TRANS, M, N, KL, KU, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, KL, KU, LDA, M, N
+@@ -3339,8 +3333,6 @@ c
+      $                   LENX, LENY
+       LOGICAL            NOCONJ
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -3520,7 +3512,7 @@ c               END IF
+ *     End of ZGBMV .
+ *
+       END
+-      SUBROUTINE ZGERU ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA )
++      SUBROUTINE ZGERU ( M, N, ALPHA, X, INCX, Y, INCY, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA
+       INTEGER            INCX, INCY, LDA, M, N
+@@ -3678,7 +3670,7 @@ c            END IF
+ *
+       END
+       SUBROUTINE ZHBMV ( UPLO, N, K, ALPHA, A, LDA, X, INCX,
+-     $                   BETA, Y, INCY )
++     $                   BETA, Y, INCY ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, K, LDA, N
+@@ -3818,8 +3810,6 @@ c            END IF
+       DOUBLE COMPLEX     TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, KPLUS1, KX, KY, L
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -3987,7 +3977,7 @@ c            END IF
+ *
+       END
+       SUBROUTINE ZHEMM ( SIDE, UPLO, M, N, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO
+       INTEGER            M, N, LDA, LDB, LDC
+@@ -4123,8 +4113,6 @@ c            END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -4290,7 +4278,7 @@ c            END IF
+ *     End of ZHEMM .
+ *
+       END
+-      SUBROUTINE ZHER  ( UPLO, N, ALPHA, X, INCX, A, LDA )
++      SUBROUTINE ZHER  ( UPLO, N, ALPHA, X, INCX, A, LDA ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, LDA, N
+@@ -4385,8 +4373,6 @@ c            END IF
+       DOUBLE COMPLEX     TEMP
+       INTEGER            I, INFO, IX, J, JX, KX
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -4503,6 +4489,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE ZHERK( UPLO, TRANS, N, K, ALPHA, A, LDA, BETA, C, LDC )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          TRANS, UPLO
+       INTEGER            K, LDA, LDC, N
+@@ -4625,8 +4612,6 @@ c               END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -4833,6 +4818,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE ZHPMV ( UPLO, N, ALPHA, AP, X, INCX, BETA, Y, INCY )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA, BETA
+       INTEGER            INCX, INCY, N
+@@ -4938,8 +4924,6 @@ c               END IF
+       DOUBLE COMPLEX     TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, K, KK, KX, KY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -5102,7 +5086,7 @@ c               END IF
+ *     End of ZHPMV .
+ *
+       END
+-      SUBROUTINE ZHPR  ( UPLO, N, ALPHA, X, INCX, AP )
++      SUBROUTINE ZHPR  ( UPLO, N, ALPHA, X, INCX, AP ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE PRECISION   ALPHA
+       INTEGER            INCX, N
+@@ -5194,8 +5178,6 @@ c               END IF
+       DOUBLE COMPLEX     TEMP
+       INTEGER            I, INFO, IX, J, JX, K, KK, KX
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -5319,7 +5301,7 @@ c               END IF
+ *     End of ZHPR  .
+ *
+       END
+-      SUBROUTINE ZHPR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP )
++      SUBROUTINE ZHPR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, AP ) BIND(C)
+ *     .. Scalar Arguments ..
+       DOUBLE COMPLEX     ALPHA
+       INTEGER            INCX, INCY, N
+@@ -5422,8 +5404,6 @@ c               END IF
+       DOUBLE COMPLEX     TEMP1, TEMP2
+       INTEGER            I, INFO, IX, IY, J, JX, JY, K, KK, KX, KY
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -5593,7 +5573,7 @@ c               END IF
+       return
+       end
+       SUBROUTINE ZSYMM ( SIDE, UPLO, M, N, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          SIDE, UPLO
+       INTEGER            M, N, LDA, LDB, LDC
+@@ -5727,8 +5707,6 @@ c               END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -5889,7 +5867,7 @@ c               END IF
+ *
+       END
+       SUBROUTINE ZSYR2K( UPLO, TRANS, N, K, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          UPLO, TRANS
+       INTEGER            N, K, LDA, LDB, LDC
+@@ -6022,8 +6000,6 @@ c               END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -6213,7 +6189,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZSYRK ( UPLO, TRANS, N, K, ALPHA, A, LDA,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          UPLO, TRANS
+       INTEGER            N, K, LDA, LDC
+@@ -6329,8 +6305,6 @@ c                  END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -6506,6 +6480,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZTBMV ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, K, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -6649,8 +6624,6 @@ c                  END IF
+       INTEGER            I, INFO, IX, J, JX, KPLUS1, KX, L
+       LOGICAL            NOCONJ, NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -6883,6 +6856,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZTBSV ( UPLO, TRANS, DIAG, N, K, A, LDA, X, INCX )
++     $           BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, K, LDA, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -7030,8 +7004,6 @@ c                  END IF
+       INTEGER            I, INFO, IX, J, JX, KPLUS1, KX, L
+       LOGICAL            NOCONJ, NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -7263,7 +7235,7 @@ c                  END IF
+ *     End of ZTBSV .
+ *
+       END
+-      SUBROUTINE ZTPMV ( UPLO, TRANS, DIAG, N, AP, X, INCX )
++      SUBROUTINE ZTPMV ( UPLO, TRANS, DIAG, N, AP, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -7367,8 +7339,6 @@ c                  END IF
+       INTEGER            I, INFO, IX, J, JX, K, KK, KX
+       LOGICAL            NOCONJ, NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -7601,7 +7571,7 @@ c                  END IF
+ *     End of ZTPMV .
+ *
+       END
+-      SUBROUTINE ZTPSV ( UPLO, TRANS, DIAG, N, AP, X, INCX )
++      SUBROUTINE ZTPSV ( UPLO, TRANS, DIAG, N, AP, X, INCX ) BIND(C)
+ *     .. Scalar Arguments ..
+       INTEGER            INCX, N
+       CHARACTER          DIAG, TRANS, UPLO
+@@ -7708,8 +7678,6 @@ c                  END IF
+       INTEGER            I, INFO, IX, J, JX, K, KK, KX
+       LOGICAL            NOCONJ, NOUNIT
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -7943,7 +7911,7 @@ c                  END IF
+ *
+       END
+       SUBROUTINE ZGEMM ( TRANSA, TRANSB, M, N, K, ALPHA, A, LDA, B, LDB,
+-     $                   BETA, C, LDC )
++     $                   BETA, C, LDC ) BIND(C)
+ *     .. Scalar Arguments ..
+       CHARACTER          TRANSA, TRANSB
+       INTEGER            M, N, K, LDA, LDB, LDC
+@@ -8073,8 +8041,6 @@ c                  END IF
+ *
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+ *     .. Intrinsic Functions ..
+@@ -8357,3 +8323,5 @@ c                  END IF
+ *     End of ZGEMM .
+ *
+       END
++
++      end module
+diff --git a/src/library/stats/src/bvalus.f b/src/library/stats/src/bvalus.f
+index 1dd84f856e..977c2c561b 100644
+--- a/src/library/stats/src/bvalus.f
++++ b/src/library/stats/src/bvalus.f
+@@ -1,4 +1,4 @@
+-      subroutine bvalus(n,knot,coef,nk,x,s,order)
++      subroutine bvalus(n,knot,coef,nk,x,s,order) bind(C)
+ C Args
+       integer n, nk, order
+       double precision knot(*),coef(*),x(*),s(*)
+diff --git a/src/library/stats/src/eureka.f b/src/library/stats/src/eureka.f
+index 8397d8e686..cd9a36b46f 100644
+--- a/src/library/stats/src/eureka.f
++++ b/src/library/stats/src/eureka.f
+@@ -20,7 +20,7 @@ c  https://www.R-project.org/Licenses/
+ c
+ c-----------------------------------------------------------------------
+ c
+-      subroutine eureka (lr,r,g,f,var,a)
++      subroutine eureka (lr,r,g,f,var,a) bind(C)
+ c
+ c      solves Toeplitz matrix equation toep(r)f=g(1+.)
+ c      by Levinson's algorithm
+diff --git a/src/library/stats/src/hclust.f b/src/library/stats/src/hclust.f
+index 807ecf4262..3e3ed7d15c 100644
+--- a/src/library/stats/src/hclust.f
++++ b/src/library/stats/src/hclust.f
+@@ -32,6 +32,7 @@ C  FLAG not passed as arg to avoid possible                  C
+ C     C/Fortran inconsistency, May 2019                      C
+ C------------------------------------------------------------C
+       SUBROUTINE HCLUST(N,LEN,IOPT,IA,IB,CRIT,MEMBR,NN,DISNN, DISS)
++     $           BIND(C)
+ c Args
+       INTEGER N, LEN, IOPT
+       INTEGER IA(N),IB(N), NN(N)
+@@ -254,7 +255,7 @@ C  Adapted from routine HCASS, which additionally determines    C
+ C   cluster assignments at all levels, at extra comput. expense C
+ C                                                               C
+ C---------------------------------------------------------------C
+-      SUBROUTINE HCASS2(N,IA,IB,IORDER,IIA,IIB)
++      SUBROUTINE HCASS2(N,IA,IB,IORDER,IIA,IIB) BIND(C)
+ c Args
+       INTEGER N,IA(N),IB(N),IORDER(N),IIA(N),IIB(N)
+ c Var
+diff --git a/src/library/stats/src/kmns.f b/src/library/stats/src/kmns.f
+index 75e4da2716..ab551c5404 100644
+--- a/src/library/stats/src/kmns.f
++++ b/src/library/stats/src/kmns.f
+@@ -9,7 +9,7 @@ C
+ c ~= R's  kmeans(x=A, centers=C, iter.max=ITER, algorithm = "Hartigan-Wong")
+ C
+       SUBROUTINE KMNS(A, M, N, C, K, IC1, IC2, NC, AN1, AN2, NCP, D,
+-     *    ITRAN, LIVE, ITER, WSS, IFAULT)
++     *    ITRAN, LIVE, ITER, WSS, IFAULT) BIND(C)
+ C
+ C     ALGORITHM AS 136  APPL. STATIST. (1979) VOL.28, NO.1
+ C
+diff --git a/src/library/stats/src/loessf.f b/src/library/stats/src/loessf.f
+index 4cbd348fd3..7a245fc2d8 100644
+--- a/src/library/stats/src/loessf.f
++++ b/src/library/stats/src/loessf.f
+@@ -23,7 +23,7 @@ C       by M. Maechler, renaming ehg182() to loesswarn()
+ 
+ C     Note that  loesswarn(errormsg_code)  is in ./loessc.c
+ 
+-      subroutine ehg126(d,n,vc,x,v,nvmax)
++      subroutine ehg126(d,n,vc,x,v,nvmax) bind(C)
+       integer d,execnt,i,j,k,n,nvmax,vc
+       DOUBLE PRECISION machin,alpha,beta,mu,t
+       DOUBLE PRECISION v(nvmax,d), x(n,d)
+@@ -68,7 +68,7 @@ c    Integer division would do here
+       return
+       end
+ 
+-      subroutine ehg125(p,nv,v,vhit,nvmax,d,k,t,r,s,f,l,u)
++      subroutine ehg125(p,nv,v,vhit,nvmax,d,k,t,r,s,f,l,u) bind(C)
+       logical i1,i2,match
+       integer d,h,i,i3,j,k,m,mm,nv,nvmax,p,r,s
+       integer f(r,0:1,s),l(r,0:1,s),u(r,0:1,s),vhit(nvmax)
+@@ -156,7 +156,7 @@ c     bottom of while loop
+       return
+       end
+ 
+-      subroutine ehg106(il,ir,k,nk,p,pi,n)
++      subroutine ehg106(il,ir,k,nk,p,pi,n) bind(C)
+ 
+ c Partial sorting of p(1, il:ir) returning the sort indices pi() only
+ c such that p(1, pi(k)) is correct
+@@ -237,6 +237,7 @@ c     bottom of while loop
+ 
+       subroutine ehg127(q,n,d,nf,f,x,psi,y,rw,kernel,k,dist,eta,b,od,w,
+      +     rcond,sing,sigma,u,e,dgamma,qraux,work,tol,dd,tdeg,cdeg,s)
++     +     bind(C)
+       integer column,d,dd,execnt,i,i3,i9,info,inorm2,j,jj,jpvt,k,kernel,
+      +     n,nf,od,sing,tdeg
+       integer cdeg(8),psi(n)
+@@ -426,7 +427,7 @@ c        bug fix 2006-07-04 for k=1, od>1.   (thanks btyner@gmail.com)
+ 
+       subroutine ehg131(x,y,rw,trl,diagl,kernel,k,n,d,nc,ncmax,vc,nv,
+      +     nvmax,nf,f,a,c,hi,lo,pi,psi,v,vhit,vval,xi,dist,eta,b,ntol,
+-     +     fd,w,vval2,rcond,sing,dd,tdeg,cdeg,lq,lf,setlf)
++     +     fd,w,vval2,rcond,sing,dd,tdeg,cdeg,lq,lf,setlf) bind(C)
+       logical setlf
+       integer identi,d,dd,i1,i2,j,k,kernel,n,nc,ncmax,nf,ntol,nv,
+      +     nvmax,sing,tdeg,vc
+@@ -477,6 +478,7 @@ c     smooth
+ 
+ c called from  lowese()  only :
+       subroutine ehg133(d,vc,nvmax,ncmax, a,c,hi,lo, v,vval,xi,m,z,s)
++     +     bind(C)
+       integer           d,vc,nvmax,ncmax,                      m
+       integer           a(ncmax),c(vc,ncmax),hi(ncmax),lo(ncmax)
+       double precision v(nvmax,d),vval(0:d,nvmax),xi(ncmax),z(m,d),s(m)
+@@ -496,14 +498,14 @@ c Var
+       return
+       end
+ 
+-      subroutine ehg140(iw,i,j)
++      subroutine ehg140(iw,i,j) bind(C)
+       integer i,j
+       integer iw(i)
+       iw(i)=j
+       return
+       end
+ 
+-      subroutine ehg141(trl,n,deg,k,d,nsing,dk,delta1,delta2)
++      subroutine ehg141(trl,n,deg,k,d,nsing,dk,delta1,delta2) bind(C)
+       double precision trl,delta1,delta2
+       integer n,deg,k,d,nsing,dk
+ 
+@@ -563,7 +565,7 @@ c R fix
+       return
+       end
+ 
+-      subroutine lowesc(n,l,ll,trl,delta1,delta2)
++      subroutine lowesc(n,l,ll,trl,delta1,delta2) bind(C)
+       integer i,j,n
+       double precision delta1,delta2,trl
+       double precision l(n,n),ll(n,n)
+@@ -601,7 +603,7 @@ c     $delta sub 2 = "tr" LL sup 2$
+       return
+       end
+ 
+-      subroutine ehg169(d,vc,nc,ncmax,nv,nvmax,v,a,xi,c,hi,lo)
++      subroutine ehg169(d,vc,nc,ncmax,nv,nvmax,v,a,xi,c,hi,lo) bind(C)
+       integer           d,vc,nc,ncmax,nv,nvmax
+       integer           a(ncmax), c(vc,ncmax), hi(ncmax), lo(ncmax)
+       DOUBLE PRECISION v(nvmax,d),xi(ncmax)
+@@ -760,7 +762,7 @@ c
+       ehg176=ehg128(z,d,nc,vc,a,xi,lo,hi,c,v,nv,vval)
+       end
+ 
+-      subroutine lowesa(trl,n,d,tau,nsing,delta1,delta2)
++      subroutine lowesa(trl,n,d,tau,nsing,delta1,delta2) bind(C)
+       integer               n,d,tau,nsing
+       double precision  trl, delta1,delta2
+ 
+@@ -777,7 +779,7 @@ c
+       end
+ 
+       subroutine ehg191(m,z,l,d,n,nf,nv,ncmax,vc,a,xi,lo,hi,c,v,nvmax,
+-     +                  vval2,lf,lq)
++     +                  vval2,lf,lq) bind(C)
+ c Args
+       integer m,d,n,nf,nv,ncmax,nvmax,vc
+       double precision z(m,d), l(m,n), xi(ncmax), v(nvmax,d),
+@@ -822,7 +824,7 @@ c           bottom of while loop
+       return
+       end
+ 
+-      subroutine ehg196(tau,d,f,trl)
++      subroutine ehg196(tau,d,f,trl) bind(C)
+       integer d,dka,dkb,tau
+       double precision alpha,f,trl,trla,trlb
+       external ehg197
+@@ -833,7 +835,7 @@ c           bottom of while loop
+       return
+       end
+ 
+-      subroutine ehg197(deg,d,f,dk,trl)
++      subroutine ehg197(deg,d,f,dk,trl) bind(C)
+       integer deg,d,dk
+       double precision f, trl
+ 
+@@ -846,7 +848,7 @@ c           bottom of while loop
+       return
+       end
+ 
+-      subroutine ehg192(y,d,n,nf,nv,nvmax,vval,lf,lq)
++      subroutine ehg192(y,d,n,nf,nv,nvmax,vval,lf,lq) bind(C)
+       integer d,i,i1,i2,j,n,nf,nv,nvmax
+       integer lq(nvmax,nf)
+       DOUBLE PRECISION i3
+@@ -1228,7 +1230,7 @@ c     m = number of x values at which to evaluate
+ c     f = span
+ c     nf = min(n, floor(f * n))
+       subroutine ehg136(u,lm,m,n,d,nf,f,x,psi,y,rw,kernel,k,dist,eta,b,
+-     +     od,o,ihat,w,rcond,sing,dd,tdeg,cdeg,s)
++     +     od,o,ihat,w,rcond,sing,dd,tdeg,cdeg,s) bind(C)
+       integer identi,d,dd,i,i1,ihat,info,j,k,kernel,l,lm,m,n,nf,
+      +     od,sing,tdeg
+       integer cdeg(8),psi(n)
+@@ -1344,7 +1346,7 @@ c called from lowesb() ... compute fit ..?..?...
+ c somewhat similar to ehg136
+       subroutine ehg139(v,nvmax,nv,n,d,nf,f,x,pi,psi,y,rw,trl,kernel,k,
+      +     dist,phi,eta,b,od,w,diagl,vval2,ncmax,vc,a,xi,lo,hi,c,
+-     +     rcond,sing,dd,tdeg,cdeg,lq,lf,setlf,s)
++     +     rcond,sing,dd,tdeg,cdeg,lq,lf,setlf,s) bind(C)
+       logical setlf
+       integer identi,d,dd,i,i2,i3,i5,i6,ii,ileaf,info,j,k,kernel,
+      +     l,n,ncmax,nf,nleaf,nv,nvmax,od,sing,tdeg,vc
+@@ -1503,7 +1505,7 @@ c           $Lf sub {:,l,:} = V SIGMA sup {+} U sup T Q sup T W$
+       return
+       end
+ 
+-      subroutine lowesb(xx,yy,ww,diagl,infl,iv,wv)
++      subroutine lowesb(xx,yy,ww,diagl,infl,iv,wv) bind(C)
+       integer infl
+       integer iv(*)
+       DOUBLE PRECISION xx(*),yy(*),ww(*),diagl(*),wv(*)
+@@ -1552,6 +1554,7 @@ c Var
+ c lowesd() : Initialize iv(*) and v(1:4)
+ c ------     called only by loess_workspace()  in ./loessc.c
+       subroutine lowesd(iv, liv,lv, v, d,n,f,ideg,nf,nvmax, setlf)
++     +     bind(C)
+       integer               liv,lv,    d,n,  ideg,nf,nvmax, setlf
+ c           setlf {Rboolean}: if(true) need  L [nf x nvmax] matrices
+       integer iv(liv)
+@@ -1655,7 +1658,7 @@ c     initialize permutation
+       return
+       end
+ 
+-      subroutine lowese(iv,wv,m,z,s)
++      subroutine lowese(iv,wv,m,z,s) bind(C)
+       integer m
+       integer iv(*)
+       double precision s(m),wv(*),z(m,1)
+@@ -1674,7 +1677,7 @@ c     initialize permutation
+       end
+ 
+ c "direct" (non-"interpolate") fit aka predict() :
+-      subroutine lowesf(xx,yy,ww,iv,wv,m,z,l,ihat,s)
++      subroutine lowesf(xx,yy,ww,iv,wv,m,z,l,ihat,s) bind(C)
+       integer m,ihat
+ c     m = number of x values at which to evaluate
+       integer iv(*)
+@@ -1708,7 +1711,7 @@ c              w,     rcond,sing,    dd,    tdeg,cdeg,  s)
+ 
+ c Called either from loess_raw() only for case [surf_stat = "interpolate/exact"], or
+ c               from loess_ise() {used only when 'se = TRUE' and surface = "interpolate"}
+-      subroutine lowesl(iv,wv,m,z,l)
++      subroutine lowesl(iv,wv,m,z,l) bind(C)
+       integer m
+       integer iv(*)
+       double precision l(m,*), wv(*), z(m,1)
+@@ -1731,7 +1734,7 @@ c               from loess_ise() {used only when 'se = TRUE' and surface = "inte
+       end
+ 
+ c  Not used
+-      subroutine lowesr(yy,iv,wv)
++      subroutine lowesr(yy,iv,wv) bind(C)
+       integer iv(*)
+       DOUBLE PRECISION yy(*),wv(*)
+ 
+@@ -1749,7 +1752,7 @@ c  Not used
+ 
+ c Update Robustness Weights -- called via .Fortran() from R's simpleLoess() in ../R/loess.R
+ c
+-      subroutine lowesw(res,n,rw,pi)
++      subroutine lowesw(res,n,rw,pi) bind(C)
+ c Tranliterated from Devlin's ratfor
+ 
+ c     implicit none
+@@ -1809,7 +1812,7 @@ c     partial sort to find 6*mad
+ 
+ c Compute Pseudovalues -- called via .Fortran() from R's simpleLoess() in ../R/loess.R
+ c                         in the case of robustness iterations
+-      subroutine lowesp(n,y,yhat,pwgts,rwgts,pi,ytilde)
++      subroutine lowesp(n,y,yhat,pwgts,rwgts,pi,ytilde) bind(C)
+       integer n
+       integer pi(n)
+       double precision y(n),yhat(n),pwgts(n),rwgts(n),ytilde(n)
+@@ -1860,7 +1863,7 @@ c     pseudovalues
+       end
+ 
+       subroutine ehg124(ll,uu,d,n,nv,nc,ncmax,vc,x,pi,a,xi,lo,hi,c,v,
+-     +     vhit,nvmax,fc,fd,dd)
++     +     vhit,nvmax,fc,fd,dd) bind(C)
+ 
+       integer ll,uu,d,n,nv,nc,ncmax,vc,nvmax,fc,dd
+       integer a(ncmax),c(vc,ncmax),hi(ncmax),lo(ncmax),pi(n),vhit(nvmax)
+@@ -1968,7 +1971,7 @@ c     bottom of while loop
+     4 return
+       end
+ 
+-      subroutine ehg129(l,u,d,x,pi,n,sigma)
++      subroutine ehg129(l,u,d,x,pi,n,sigma) bind(C)
+       integer d,execnt,i,k,l,n,u
+       integer pi(n)
+       DOUBLE PRECISION machin,alpha,beta,t
+@@ -1997,7 +2000,7 @@ c     initialize  d1mach(2) === DBL_MAX:
+       end
+ 
+ c {called only from ehg127}  purpose...?...
+-      subroutine ehg137(z,leaf,nleaf,d,ncmax,a,xi,lo,hi)
++      subroutine ehg137(z,leaf,nleaf,d,ncmax,a,xi,lo,hi) bind(C)
+       integer d,nleaf
+       integer leaf(256),a(ncmax),hi(ncmax),lo(ncmax),pstack(20)
+       DOUBLE PRECISION z(d),xi(ncmax)
+diff --git a/src/library/stats/src/ppr.f b/src/library/stats/src/ppr.f
+index a43173e1e2..69fcd5795a 100644
+--- a/src/library/stats/src/ppr.f
++++ b/src/library/stats/src/ppr.f
+@@ -7,7 +7,7 @@ C     B.D. Ripley (ripley@stats.ox.ac.uk)  1994-7.
+ C
+ C
+       subroutine smart(m,mu,p,q,n, w,x,y,ww,smod,nsmod,
+-     &     sp,nsp,dp,ndp,edf)
++     &     sp,nsp,dp,ndp,edf) bind(C)
+ 
+       integer m,mu,p,q,n, nsmod, nsp,ndp
+       double precision x(p,n),y(q,n),w(n),ww(q),smod(nsmod),
+@@ -339,6 +339,20 @@ C REPEAT
+       end
+ 
+       subroutine oneone(ist,p,n, w,sw,y,x,a,f,t,asr,sc,g,dp,edf)
++      interface
++          subroutine supsmu (n,x,y,w,iper,span,alpha,smo,sc,edf)
++              integer :: n
++              double precision :: x (n)
++              double precision :: y (n)
++              double precision :: w (n)
++              integer :: iper
++              double precision :: span
++              double precision :: alpha
++              double precision :: smo (n)
++              double precision :: sc (n,7)
++              double precision :: edf
++          end subroutine
++       end interface
+ c Args
+       integer           ist,p,n
+       double precision w(n),sw,y(n),x(p,n),a(p),f(n),t(n),asr,
+@@ -842,6 +856,7 @@ c Common Vars
+       end
+ 
+       subroutine setppr(span1, alpha1, optlevel, ism, df1, gcvpen1)
++     &     bind(C)
+ c Put 'parameters' into Common blocks
+       integer optlevel,ism
+       double precision span1,alpha1, df1, gcvpen1
+@@ -891,7 +906,7 @@ c
+       return
+       end
+ 
+-      subroutine pppred(np,x,smod,y,sc)
++      subroutine pppred(np,x,smod,y,sc) bind(C)
+ 
+       integer np
+       double precision x(np,*),y(np,*),smod(*), sc(*)
+@@ -974,7 +989,7 @@ C        END
+       end
+ 
+ c Called from R's supsmu()
+-      subroutine setsmu (tr)
++      subroutine setsmu (tr) bind(C)
+       integer tr
+ 
+       double precision  df, gcvpen
+@@ -987,7 +1002,7 @@ c Called from R's supsmu()
+       return
+       end
+ 
+-      subroutine supsmu (n,x,y,w,iper,span,alpha,smo,sc,edf)
++      subroutine supsmu (n,x,y,w,iper,span,alpha,smo,sc,edf) bind(C)
+ c
+ c------------------------------------------------------------------
+ c
+diff --git a/src/library/stats/src/qsbart.f b/src/library/stats/src/qsbart.f
+index 1631078193..8270a26486 100644
+--- a/src/library/stats/src/qsbart.f
++++ b/src/library/stats/src/qsbart.f
+@@ -30,7 +30,7 @@ C
+       subroutine rbart(penalt,dofoff,xs,ys,ws,ssw,n,knot,nk,
+      &     coef,sz,lev,
+      &     crit,iparms,spar,parms,
+-     &     scrtch, ld4,ldnk,ier)
++     &     scrtch, ld4,ldnk,ier) bind(C)
+ c Args:
+       integer n,nk, iparms(4), ld4,ldnk,ier
+       double precision penalt,dofoff, xs(n),ys(n),ws(n), ssw,
+diff --git a/src/library/stats/src/stl.f b/src/library/stats/src/stl.f
+index 83d99b4589..9a29c86380 100644
+--- a/src/library/stats/src/stl.f
++++ b/src/library/stats/src/stl.f
+@@ -12,6 +12,7 @@ c     (using Emacs), many more comments;  by M.Maechler 2001-02.
+ c
+       subroutine stl(y,n,np,ns,nt,nl, isdeg,itdeg,ildeg,
+      &     nsjump,ntjump,nljump, ni,no, rw,season,trend,work)
++     &     bind(C)
+ 
+ c     implicit none
+ c Arg
+diff --git a/src/main/xxxpr.f b/src/main/xxxpr.f
+index 88b1d64065..965bc0c2f4 100644
+--- a/src/main/xxxpr.f
++++ b/src/main/xxxpr.f
+@@ -21,6 +21,17 @@ c-----------------------------------------------------------------------
+ 
+ C These now all call C functions via F77_NAME(.) in ./print.c :
+ 
++      program xxxpr
++      interface
++         subroutine realp0(label, nchar, data, ndata) bind(C)
++         use, intrinsic :: iso_c_binding
++         character(c_char) :: label
++         integer(c_int) :: nchar, ndata
++         real(c_float) :: data
++         end subroutine
++      end interface
++      end program xxxpr
++
+       subroutine intpr(label, nchar, data, ndata)
+       integer nchar, ndata
+       character*(*) label
+diff --git a/src/modules/lapack/cmplx.f b/src/modules/lapack/cmplx.f
+index 29c33133e6..87f80dd123 100644
+--- a/src/modules/lapack/cmplx.f
++++ b/src/modules/lapack/cmplx.f
+@@ -79,6 +79,15 @@
+ *> Nick Higham for use with ZLACON.
+ *
+ *  =====================================================================
++      MODULE CMPLX
++      INTERFACE
++         LOGICAL          FUNCTION LSAME( CA, CB ) BIND(C)
++         CHARACTER :: CA, CB
++         END FUNCTION
++      END INTERFACE
++
++      CONTAINS
++
+       DOUBLE PRECISION FUNCTION DZSUM1( N, CX, INCX )
+ *
+ *  -- LAPACK auxiliary routine (version 3.7.0) --
+@@ -786,9 +795,8 @@
+      $                   SN, THRESH, TOL, TOLMUL, UNFL
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARTG, DLAS2, DLASQ1, DLASV2, XERBLA, ZDROT,
+@@ -1693,8 +1701,6 @@
+       DOUBLE PRECISION   S
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZDSCAL, ZSWAP
+@@ -1999,10 +2005,10 @@
+      $                   SFMIN2
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            DISNAN, LSAME
++      LOGICAL            DISNAN
+       INTEGER            IZAMAX
+       DOUBLE PRECISION   DLAMCH, DZNRM2
+-      EXTERNAL           DISNAN, LSAME, IZAMAX, DLAMCH, DZNRM2
++      EXTERNAL           DISNAN, IZAMAX, DLAMCH, DZNRM2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZDSCAL, ZSWAP
+@@ -3045,10 +3051,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IZAMAX
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, IZAMAX, DLAMCH
++      EXTERNAL           IZAMAX, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZDRSCL, ZLACN2, ZLATRS
+@@ -3707,10 +3712,9 @@
+      $                   ZHSEQR, ZLACPY, ZLASCL, ZTRSEN, ZUNGHR
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, ZLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, ZLANGE
++      EXTERNAL           ILAENV, DLAMCH, ZLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, SQRT
+@@ -4113,10 +4117,9 @@
+      $                   ZHSEQR, ZLACPY, ZLASCL, ZSCAL, ZTREVC3, ZUNGHR
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX, ILAENV
+       DOUBLE PRECISION   DLAMCH, DZNRM2, ZLANGE
+-      EXTERNAL           LSAME, IDAMAX, ILAENV, DLAMCH, DZNRM2, ZLANGE
++      EXTERNAL           IDAMAX, ILAENV, DLAMCH, DZNRM2, ZLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          DBLE, DCMPLX, CONJG, AIMAG, MAX, SQRT
+@@ -5669,10 +5672,9 @@
+       DOUBLE PRECISION   RWORK( 1 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, ZLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, ZLANGE
++      EXTERNAL           ILAENV, DLAMCH, ZLANGE
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLABAD, XERBLA, ZGELQF, ZGEQRF, ZLASCL, ZLASET,
+@@ -7706,9 +7708,8 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZAXPY, ZCOPY, ZGEMV, ZGETRS, ZLACN2
+@@ -8410,9 +8411,8 @@
+      $                   ZLASET, ZUNGBR, ZUNGLQ, ZUNGQR, ZUNMBR
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, ZLANGE
+-      EXTERNAL           LSAME, DLAMCH, ZLANGE
++      EXTERNAL           DLAMCH, ZLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          INT, MAX, MIN, SQRT
+@@ -10788,10 +10788,9 @@
+      $                   ZUNGQR, ZUNMBR
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, ZLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, ZLANGE
++      EXTERNAL           ILAENV, DLAMCH, ZLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, MIN, SQRT
+@@ -14615,9 +14614,8 @@
+      $                   ROWCND, RPVGRW, SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, ZLANGE, ZLANTR
+-      EXTERNAL           LSAME, DLAMCH, ZLANGE, ZLANTR
++      EXTERNAL           DLAMCH, ZLANGE, ZLANTR
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZGECON, ZGEEQU, ZGERFS, ZGETRF, ZGETRS,
+@@ -16192,8 +16190,6 @@
+       LOGICAL            NOTRAN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLASWP, ZTRSM
+@@ -16441,8 +16437,6 @@
+       INTEGER            I, K
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZDSCAL, ZSWAP
+@@ -16790,10 +16784,9 @@
+       COMPLEX*16         CDUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IZAMAX
+       DOUBLE PRECISION   DDOT, DLAMCH
+-      EXTERNAL           LSAME, IZAMAX, DDOT, DLAMCH
++      EXTERNAL           IZAMAX, DDOT, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DSCAL, XERBLA, ZDSCAL, ZSWAP
+@@ -17470,10 +17463,9 @@
+      $                   ZUNMQR
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, ZLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, ZLANGE
++      EXTERNAL           ILAENV, DLAMCH, ZLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, SQRT
+@@ -18011,10 +18003,9 @@
+      $                   ZUNMQR
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, ZLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, ZLANGE
++      EXTERNAL           ILAENV, DLAMCH, ZLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, DBLE, DIMAG, MAX, SQRT
+@@ -18540,8 +18531,6 @@
+       COMPLEX*16         CTEMP, S
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLARTG, ZLASET, ZROT
+@@ -18839,10 +18828,9 @@
+      $                   SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, ZLANHE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, ZLANHE
++      EXTERNAL           ILAENV, DLAMCH, ZLANHE
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSTERF, XERBLA, ZHETRD, ZLASCL, ZSTEQR,
+@@ -19204,10 +19192,9 @@
+      $                   SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, ZLANHE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, ZLANHE
++      EXTERNAL           ILAENV, DLAMCH, ZLANHE
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSTERF, XERBLA, ZHETRD, ZLACPY, ZLASCL,
+@@ -19571,9 +19558,8 @@
+       EXTERNAL           XERBLA, ZAXPY, ZHEMV, ZHER2, ZLARFG
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       COMPLEX*16         ZDOTC
+-      EXTERNAL           LSAME, ZDOTC
++      EXTERNAL           ZDOTC
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          DBLE, MAX, MIN
+@@ -19925,9 +19911,8 @@
+       INTRINSIC          MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -20400,9 +20385,8 @@
+      $                   U12, X
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, ZLANHS
+-      EXTERNAL           LSAME, DLAMCH, ZLANHS
++      EXTERNAL           DLAMCH, ZLANHS
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLARTG, ZLASET, ZROT, ZSCAL
+@@ -21298,8 +21282,7 @@
+ *     ..
+ *     .. External Functions ..
+       INTEGER            ILAENV
+-      LOGICAL            LSAME
+-      EXTERNAL           ILAENV, LSAME
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZCOPY, ZLACPY, ZLAHQR, ZLAQR0, ZLASET
+@@ -22409,8 +22392,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MIN
+@@ -22568,8 +22549,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MIN
+@@ -27348,8 +27327,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           ZLASSQ, DCOMBSSQ
+@@ -27580,8 +27559,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           ZLASSQ, DCOMBSSQ
+@@ -27844,8 +27823,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           ZLASSQ, DCOMBSSQ
+@@ -28096,8 +28075,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           ZLASSQ, DCOMBSSQ
+@@ -33155,9 +33134,8 @@
+       EXTERNAL           ZGEMV, ZGERC
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAZLR, ILAZLC
+-      EXTERNAL           LSAME, ILAZLR, ILAZLC
++      EXTERNAL           ILAZLR, ILAZLC
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -33452,8 +33430,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           ZCOPY, ZGEMM, ZLACGV, ZTRMM
+@@ -34356,8 +34332,6 @@
+       EXTERNAL           ZGEMV, ZTRMV, ZGEMM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -34639,8 +34613,6 @@
+      $                   V1, V10, V2, V3, V4, V5, V6, V7, V8, V9
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           ZLARF
+@@ -35612,9 +35584,9 @@
+       DOUBLE PRECISION   BIGNUM, CFROM1, CFROMC, CTO1, CTOC, MUL, SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
++      LOGICAL            DISNAN
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH, DISNAN
++      EXTERNAL           DLAMCH, DISNAN
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, MAX, MIN
+@@ -35937,8 +35909,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MIN
+@@ -36224,8 +36194,6 @@
+       INTRINSIC          MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -37003,9 +36971,8 @@
+       COMPLEX*16         D11, D21, D22, R1, T, Z
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IZAMAX
+-      EXTERNAL           LSAME, IZAMAX
++      EXTERNAL           IZAMAX
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           ZCOPY, ZGEMM, ZGEMV, ZSCAL, ZSWAP
+@@ -38177,9 +38144,8 @@
+       EXTERNAL           ZAXPY, ZGEMV, ZHEMV, ZLACGV, ZLARFG, ZSCAL
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       COMPLEX*16         ZDOTC
+-      EXTERNAL           LSAME, ZDOTC
++      EXTERNAL           ZDOTC
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          DBLE, MIN
+@@ -38575,11 +38541,10 @@
+       COMPLEX*16         CSUMJ, TJJS, USCAL, ZDUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX, IZAMAX
+       DOUBLE PRECISION   DLAMCH, DZASUM
+       COMPLEX*16         ZDOTC, ZDOTU, ZLADIV
+-      EXTERNAL           LSAME, IDAMAX, IZAMAX, DLAMCH, DZASUM, ZDOTC,
++      EXTERNAL           IDAMAX, IZAMAX, DLAMCH, DZASUM, ZDOTC,
+      $                   ZDOTU, ZLADIV
+ *     ..
+ *     .. External Subroutines ..
+@@ -39399,9 +39364,8 @@
+       DOUBLE PRECISION   AII
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       COMPLEX*16         ZDOTC
+-      EXTERNAL           LSAME, ZDOTC
++      EXTERNAL           ZDOTC
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZDSCAL, ZGEMV, ZLACGV
+@@ -39606,9 +39570,8 @@
+       INTEGER            I, IB, NB
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZGEMM, ZHERK, ZLAUU2, ZTRMM
+@@ -39837,9 +39800,9 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
++      LOGICAL            DISNAN
+       COMPLEX*16         ZDOTC
+-      EXTERNAL           LSAME, ZDOTC, DISNAN
++      EXTERNAL           ZDOTC, DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZDSCAL, ZGEMV, ZLACGV
+@@ -40070,9 +40033,8 @@
+       INTEGER            J, JB, NB
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZGEMM, ZHERK, ZPOTRF2, ZTRSM
+@@ -40320,8 +40282,8 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           ZHERK, ZTRSM, XERBLA
+@@ -40539,8 +40501,6 @@
+ *  =====================================================================
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLAUUM, ZTRTRI
+@@ -40989,10 +40949,9 @@
+       DOUBLE PRECISION   EPS, ORGNRM, P, TINY
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANST
++      EXTERNAL           ILAENV, DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASCL, DLASET, DSTEDC, DSTEQR, DSTERF, XERBLA,
+@@ -41401,9 +41360,8 @@
+      $                   S, SAFMAX, SAFMIN, SSFMAX, SSFMIN, TST
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANST, DLAPY2
+-      EXTERNAL           LSAME, DLAMCH, DLANST, DLAPY2
++      EXTERNAL           DLAMCH, DLANST, DLAPY2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLAE2, DLAEV2, DLARTG, DLASCL, DLASRT, XERBLA,
+@@ -41995,8 +41953,6 @@
+       COMPLEX*16         TEMP1, TEMP2
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -42314,8 +42270,6 @@
+       COMPLEX*16         TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -42644,9 +42598,9 @@
+       COMPLEX*16         D11, D12, D21, D22, R1, T, WK, WKM1, WKP1, Z
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            DISNAN, LSAME
++      LOGICAL            DISNAN
+       INTEGER            IZAMAX
+-      EXTERNAL           DISNAN, LSAME, IZAMAX
++      EXTERNAL           DISNAN, IZAMAX
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZSCAL, ZSWAP, ZSYR
+@@ -43236,9 +43190,8 @@
+       INTEGER            IINFO, IWS, J, K, KB, LDWORK, LWKOPT, NB, NBMIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLASYF, ZSYTF2
+@@ -43536,9 +43489,8 @@
+       COMPLEX*16         AK, AKKP1, AKP1, D, T, TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       COMPLEX*16         ZDOTU
+-      EXTERNAL           LSAME, ZDOTU
++      EXTERNAL           ZDOTU
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZCOPY, ZSWAP, ZSYMV
+@@ -44034,10 +43986,9 @@
+       COMPLEX*16         BCOEFF, CA, CB, D, SALPHA, SUM, SUMA, SUMB, X
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+       COMPLEX*16         ZLADIV
+-      EXTERNAL           LSAME, DLAMCH, ZLADIV
++      EXTERNAL           DLAMCH, ZLADIV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLABAD, XERBLA, ZGEMV
+@@ -46261,8 +46212,6 @@
+       COMPLEX*16         RHS( LDZ ), Z( LDZ, LDZ )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZAXPY, ZGESC2, ZGETC2, ZLATDF, ZSCAL
+@@ -46771,9 +46720,8 @@
+       DOUBLE PRECISION   DSCALE, DSUM, SCALE2, SCALOC
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZGEMM, ZLACPY, ZLASET, ZSCAL, ZTGSY2
+@@ -47307,10 +47255,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IZAMAX
+       DOUBLE PRECISION   DLAMCH, ZLANTR
+-      EXTERNAL           LSAME, IZAMAX, DLAMCH, ZLANTR
++      EXTERNAL           IZAMAX, DLAMCH, ZLANTR
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZDRSCL, ZLACN2, ZLATRS
+@@ -47671,10 +47618,9 @@
+       COMPLEX*16         CDUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IZAMAX
+       DOUBLE PRECISION   DLAMCH, DZASUM
+-      EXTERNAL           LSAME, IZAMAX, DLAMCH, DZASUM
++      EXTERNAL           IZAMAX, DLAMCH, DZASUM
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZCOPY, ZDSCAL, ZGEMV, ZLATRS, DLABAD
+@@ -48188,10 +48134,9 @@
+       COMPLEX*16         CDUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV, IZAMAX
+       DOUBLE PRECISION   DLAMCH, DZASUM
+-      EXTERNAL           LSAME, ILAENV, IZAMAX, DLAMCH, DZASUM
++      EXTERNAL           ILAENV, IZAMAX, DLAMCH, DZASUM
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZCOPY, ZDSCAL, ZGEMV, ZLATRS,
+@@ -48686,8 +48631,6 @@
+       COMPLEX*16         SN, T11, T22, TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLARTG, ZROT
+@@ -49074,9 +49017,8 @@
+       DOUBLE PRECISION   RWORK( 1 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   ZLANGE
+-      EXTERNAL           LSAME, ZLANGE
++      EXTERNAL           ZLANGE
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLACN2, ZLACPY, ZTREXC, ZTRSYL
+@@ -49423,10 +49365,9 @@
+       DOUBLE PRECISION   DUM( 1 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, ZLANGE
+       COMPLEX*16         ZDOTC, ZDOTU, ZLADIV
+-      EXTERNAL           LSAME, DLAMCH, ZLANGE, ZDOTC, ZDOTU, ZLADIV
++      EXTERNAL           DLAMCH, ZLANGE, ZDOTC, ZDOTU, ZLADIV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLABAD, XERBLA, ZDSCAL
+@@ -49824,8 +49765,6 @@
+       COMPLEX*16         AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZSCAL, ZTRMV
+@@ -50035,9 +49974,8 @@
+       INTEGER            J, JB, NB, NN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZTRMM, ZTRSM, ZTRTI2
+@@ -50308,8 +50246,6 @@
+       LOGICAL            NOUNIT
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZTRSM
+@@ -50953,8 +50889,6 @@
+       INTEGER            I, IINFO, J, LWKOPT, MN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZUNGLQ, ZUNGQR
+@@ -53082,9 +53016,8 @@
+       INTEGER            I, IINFO, J, LWKOPT, NB
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZUNGQL, ZUNGQR
+@@ -53374,8 +53307,6 @@
+       COMPLEX*16         AII, TAUI
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLARF
+@@ -53655,8 +53586,6 @@
+       COMPLEX*16         AII, TAUI
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLARF
+@@ -53974,9 +53903,8 @@
+       INTEGER            I1, I2, IINFO, LWKOPT, MI, NB, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZUNMLQ, ZUNMQR
+@@ -54334,9 +54262,8 @@
+       INTEGER            I1, I2, IINFO, LWKOPT, MI, NB, NH, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZUNMQR
+@@ -54614,8 +54541,6 @@
+       COMPLEX*16         AII, TAUI
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLACGV, ZLARF
+@@ -54914,9 +54839,8 @@
+      $                   LWKOPT, MI, NB, NBMIN, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLARFB, ZLARFT, ZUNML2
+@@ -55260,9 +55184,8 @@
+      $                   MI, NB, NBMIN, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLARFB, ZLARFT, ZUNM2L
+@@ -55599,9 +55522,8 @@
+      $                   LWKOPT, MI, NB, NBMIN, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZLARFB, ZLARFT, ZUNM2R
+@@ -55937,9 +55859,8 @@
+       INTEGER            I1, I2, IINFO, LWKOPT, MI, NB, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, ZUNMQL, ZUNMQR
+@@ -56054,3 +55975,5 @@
+ *     End of ZUNMTR
+ *
+       END
++
++      END MODULE
+diff --git a/src/modules/lapack/dlamch.f b/src/modules/lapack/dlamch.f
+index 76f875cef6..8cd1204a72 100644
+--- a/src/modules/lapack/dlamch.f
++++ b/src/modules/lapack/dlamch.f
+@@ -61,6 +61,15 @@
+ *> \ingroup auxOTHERauxiliary
+ *
+ *  =====================================================================
++      MODULE DLAMCH
++      INTERFACE
++         LOGICAL          FUNCTION LSAME( CA, CB ) BIND(C)
++         CHARACTER :: CA, CB
++         END FUNCTION
++      END INTERFACE
++
++      CONTAINS
++
+       DOUBLE PRECISION FUNCTION DLAMCH( CMACH )
+ *
+ *  -- LAPACK auxiliary routine (version 3.7.0) --
+@@ -82,8 +91,6 @@
+       DOUBLE PRECISION   RND, EPS, SFMIN, SMALL, RMACH
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          DIGITS, EPSILON, HUGE, MAXEXPONENT,
+@@ -187,3 +194,5 @@
+       END
+ *
+ ************************************************************************
++
++      END MODULE
+diff --git a/src/modules/lapack/dlapack.f b/src/modules/lapack/dlapack.f
+index 11ee33031a..408aba55f1 100644
+--- a/src/modules/lapack/dlapack.f
++++ b/src/modules/lapack/dlapack.f
+@@ -327,6 +327,16 @@
+ *> \ingroup doubleOTHERcomputational
+ *
+ *  =====================================================================
++
++      MODULE DLAPACK
++      INTERFACE
++         LOGICAL          FUNCTION LSAME( CA, CB ) BIND(C)
++         CHARACTER :: CA, CB
++         END FUNCTION
++      END INTERFACE
++
++      CONTAINS
++
+       SUBROUTINE DBBCSD( JOBU1, JOBU2, JOBV1T, JOBV2T, TRANS, M, P, Q,
+      $                   THETA, PHI, U1, LDU1, U2, LDU2, V1T, LDV1T,
+      $                   V2T, LDV2T, B11D, B11E, B12D, B12E, B21D, B21E,
+@@ -379,8 +389,7 @@
+ *     ..
+ *     .. External Functions ..
+       DOUBLE PRECISION   DLAMCH
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, ATAN2, COS, MAX, MIN, SIN, SQRT
+@@ -1317,10 +1326,9 @@
+       DOUBLE PRECISION   CS, EPS, ORGNRM, P, R, SN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANST
++      EXTERNAL           ILAENV, DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DLARTG, DLASCL, DLASD0, DLASDA, DLASDQ,
+@@ -1889,9 +1897,8 @@
+      $                   SN, THRESH, TOL, TOLMUL, UNFL
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARTG, DLAS2, DLASQ1, DLASR, DLASV2, DROT,
+@@ -2707,9 +2714,8 @@
+       DOUBLE PRECISION   ANORM, EPS, NEWGAP, OLDGAP, SAFMIN, THRESH
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, MAX, MIN
+@@ -3030,8 +3036,6 @@
+       INTRINSIC          MAX, MIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -3534,10 +3538,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DDOT, DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DDOT, DLAMCH
++      EXTERNAL           IDAMAX, DDOT, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DLACN2, DLATBS, DRSCL, XERBLA
+@@ -4582,9 +4585,8 @@
+       INTRINSIC          ABS, MAX, MIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -5419,9 +5421,8 @@
+      $                   ROWCND, RPVGRW, SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANGB, DLANTB
+-      EXTERNAL           LSAME, DLAMCH, DLANGB, DLANTB
++      EXTERNAL           DLAMCH, DLANGB, DLANTB
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DGBCON, DGBEQU, DGBRFS, DGBTRF, DGBTRS,
+@@ -6617,8 +6618,6 @@
+       INTEGER            I, J, KD, L, LM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DGER, DSWAP, DTBSV, XERBLA
+@@ -6878,8 +6877,6 @@
+       DOUBLE PRECISION   S
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSWAP, XERBLA
+@@ -7181,10 +7178,10 @@
+      $                   SFMIN2
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            DISNAN, LSAME
++      LOGICAL            DISNAN
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DLAMCH, DNRM2
+-      EXTERNAL           DISNAN, LSAME, IDAMAX, DLAMCH, DNRM2
++      EXTERNAL           DISNAN, IDAMAX, DLAMCH, DNRM2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSWAP, XERBLA
+@@ -8216,10 +8213,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DLAMCH
++      EXTERNAL           IDAMAX, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DLATRS, DRSCL, XERBLA
+@@ -9204,10 +9200,9 @@
+      $                   DLABAD, DLASCL, DORGHR, DSWAP, DTRSEN, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, SQRT
+@@ -9806,10 +9801,9 @@
+      $                   DLASCL, DORGHR, DSWAP, DTRSEN, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLABAD, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLABAD, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, SQRT
+@@ -10363,10 +10357,9 @@
+      $                   XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX, ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE, DLAPY2, DNRM2
+-      EXTERNAL           LSAME, IDAMAX, ILAENV, DLAMCH, DLANGE, DLAPY2,
++      EXTERNAL           IDAMAX, ILAENV, DLAMCH, DLANGE, DLAPY2,
+      $                   DNRM2
+ *     ..
+ *     .. Intrinsic Functions ..
+@@ -11010,10 +11003,9 @@
+      $                   DTRSNA, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX, ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE, DLAPY2, DNRM2
+-      EXTERNAL           LSAME, IDAMAX, ILAENV, DLAMCH, DLANGE, DLAPY2,
++      EXTERNAL           IDAMAX, ILAENV, DLAMCH, DLANGE, DLAPY2,
+      $                   DNRM2
+ *     ..
+ *     .. Intrinsic Functions ..
+@@ -11617,10 +11609,9 @@
+      $                   DLASCL, DLASET, DORGQR, DORMQR, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          INT, MAX
+@@ -12242,10 +12233,9 @@
+      $                   DLASCL, DLASET, DORGQR, DORMQR, DTGEVC, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, INT, MAX
+@@ -13760,8 +13750,7 @@
+ *     .. External Functions ..
+       DOUBLE PRECISION  DLAMCH, DNRM2
+       INTEGER   IDAMAX
+-      LOGICAL   LSAME
+-      EXTERNAL  IDAMAX, LSAME, DLAMCH, DNRM2
++      EXTERNAL  IDAMAX, DLAMCH, DNRM2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL  DCOPY,  DGELQF, DGEQP3, DGEQRF, DLACPY, DLASCL,
+@@ -15718,10 +15707,9 @@
+       DOUBLE PRECISION   RWORK( 1 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLABAD, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLABAD, DLAMCH, DLANGE
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGELQF, DGEQRF, DLASCL, DLASET, DORMLQ, DORMQR,
+@@ -18490,8 +18478,6 @@
+       INTEGER            I, IB, LDWORK, KF, Q
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, DLARFB
+@@ -21639,9 +21625,8 @@
+       INTRINSIC          ABS, MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -22795,9 +22780,8 @@
+      $                   XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           DLAMCH, DLANGE, LSAME
++      EXTERNAL           DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          INT, MAX, MIN, SQRT
+@@ -24507,10 +24491,9 @@
+      $                   XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, MIN, SQRT
+@@ -28147,8 +28130,6 @@
+ *     from LAPACK
+       DOUBLE PRECISION   DLAMCH
+       EXTERNAL           DLAMCH
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+ *     ..
+@@ -29754,9 +29735,8 @@
+      $                   ROWCND, RPVGRW, SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANGE, DLANTR
+-      EXTERNAL           LSAME, DLAMCH, DLANGE, DLANTR
++      EXTERNAL           DLAMCH, DLANGE, DLANTR
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGECON, DGEEQU, DGERFS, DGETRF, DGETRS, DLACPY,
+@@ -31326,8 +31306,6 @@
+       LOGICAL            NOTRAN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASWP, DTRSM, XERBLA
+@@ -31573,8 +31551,6 @@
+       INTEGER            I, K
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSWAP, XERBLA
+@@ -31920,10 +31896,9 @@
+      $                   SFMIN, SUM, T, TA, TB, TC
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DDOT, DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DDOT, DLAMCH
++      EXTERNAL           IDAMAX, DDOT, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DSCAL, DSWAP, XERBLA
+@@ -32600,10 +32575,9 @@
+      $                   XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, MAX, SQRT
+@@ -33366,10 +33340,9 @@
+      $                   XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, MAX, SQRT
+@@ -34038,10 +34011,9 @@
+      $                   XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, MAX, SQRT
+@@ -34800,10 +34772,9 @@
+      $                   DTGSNA, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANGE
++      EXTERNAL           ILAENV, DLAMCH, DLANGE
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, MAX, SQRT
+@@ -35814,8 +35785,6 @@
+       DOUBLE PRECISION   C, S, TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARTG, DLASET, DROT, XERBLA
+@@ -37252,9 +37221,8 @@
+       DOUBLE PRECISION   ANORM, BNORM, SMAX, TEMP, TOLA, TOLB, ULP, UNFL
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANGE
+-      EXTERNAL           LSAME, DLAMCH, DLANGE
++      EXTERNAL           DLAMCH, DLANGE
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DGGSVP, DTGSJA, XERBLA
+@@ -37641,8 +37609,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEQPF, DGEQR2, DGERQ2, DLACPY, DLAPMT, DLASET,
+@@ -38138,8 +38104,7 @@
+ *     .. External Functions ..
+       DOUBLE PRECISION   DDOT, DNRM2
+       INTEGER            IDAMAX
+-      LOGICAL            LSAME
+-      EXTERNAL           IDAMAX, LSAME, DDOT, DNRM2
++      EXTERNAL           IDAMAX, DDOT, DNRM2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DCOPY, DLASCL, DLASSQ, DROTM, DSWAP,
+@@ -39235,8 +39200,7 @@
+ *     .. External Functions ..
+       DOUBLE PRECISION   DDOT, DNRM2
+       INTEGER            IDAMAX
+-      LOGICAL            LSAME
+-      EXTERNAL           IDAMAX, LSAME, DDOT, DNRM2
++      EXTERNAL           IDAMAX, DDOT, DNRM2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DCOPY, DLASCL, DLASSQ, DROTM, DSWAP,
+@@ -39919,8 +39883,6 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGTTRS, DLACN2, XERBLA
+@@ -40251,9 +40213,8 @@
+       INTRINSIC          ABS, MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -41127,9 +41088,8 @@
+       DOUBLE PRECISION   ANORM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANGT
+-      EXTERNAL           LSAME, DLAMCH, DLANGT
++      EXTERNAL           DLAMCH, DLANGT
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DGTCON, DGTRFS, DGTTRF, DGTTRS, DLACPY,
+@@ -42301,9 +42261,8 @@
+       DOUBLE PRECISION   V( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANHS, DLAPY2, DLAPY3
+-      EXTERNAL           LSAME, DLAMCH, DLANHS, DLAPY2, DLAPY3
++      EXTERNAL           DLAMCH, DLANHS, DLAPY2, DLAPY3
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLAG2, DLARFG, DLARTG, DLASET, DLASV2, DROT,
+@@ -43612,9 +43571,9 @@
+      $                   WKR
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
++      LOGICAL            DISNAN
+       DOUBLE PRECISION   DLAMCH, DLANHS
+-      EXTERNAL           LSAME, DLAMCH, DLANHS, DISNAN
++      EXTERNAL           DLAMCH, DLANHS, DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLAEIN, XERBLA
+@@ -44210,8 +44169,7 @@
+ *     ..
+ *     .. External Functions ..
+       INTEGER            ILAENV
+-      LOGICAL            LSAME
+-      EXTERNAL           ILAENV, LSAME
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACPY, DLAHQR, DLAQR0, DLASET, XERBLA
+@@ -45623,8 +45581,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MIN
+@@ -53879,8 +53835,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -59103,8 +59057,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, DCOMBSSQ
+@@ -59331,8 +59285,8 @@
+       EXTERNAL           DLASSQ, DCOMBSSQ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, MIN, SQRT
+@@ -59537,8 +59491,8 @@
+       DOUBLE PRECISION   ANORM, SCALE, SUM, TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ
+@@ -59751,8 +59705,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, DCOMBSSQ
+@@ -59988,8 +59942,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, DCOMBSSQ
+@@ -60344,8 +60298,8 @@
+       DOUBLE PRECISION   SCALE, S, VALUE, AA, TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ
+@@ -61216,8 +61170,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, DCOMBSSQ
+@@ -61481,8 +61435,8 @@
+       DOUBLE PRECISION   ANORM, SCALE, SUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ
+@@ -61693,8 +61647,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, DCOMBSSQ
+@@ -61975,8 +61929,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, DCOMBSSQ
+@@ -62339,8 +62293,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, DCOMBSSQ
+@@ -62734,8 +62688,8 @@
+       DOUBLE PRECISION   SSQ( 2 ), COLSSQ( 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, DCOMBSSQ
+@@ -69265,9 +69219,8 @@
+       DOUBLE PRECISION   CJ, LARGE, SMALL
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, MIN
+@@ -69476,9 +69429,8 @@
+       DOUBLE PRECISION   CJ, LARGE, SMALL
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -69696,9 +69648,8 @@
+       DOUBLE PRECISION   CJ, LARGE, SMALL
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -71297,9 +71248,8 @@
+       EXTERNAL           DGEMV, DGER
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILADLR, ILADLC
+-      EXTERNAL           LSAME, ILADLR, ILADLC
++      EXTERNAL           ILADLR, ILADLC
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -71594,8 +71544,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DGEMM, DTRMM
+@@ -72711,8 +72659,6 @@
+       EXTERNAL           DGEMV, DTRMV
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -72994,8 +72940,6 @@
+      $                   V1, V10, V2, V3, V4, V5, V6, V7, V8, V9
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARF
+@@ -74671,8 +74615,6 @@
+ 
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -75128,10 +75070,9 @@
+       INTEGER            IDUMMA( 1 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, ILAENV, DLAMCH
++      EXTERNAL           ILAENV, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLAEBZ
+@@ -75980,9 +75921,8 @@
+       INTEGER            ISEED( 4 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION            DLAMCH
+-      EXTERNAL           DLAMCH, LSAME
++      EXTERNAL           DLAMCH
+ 
+ *     ..
+ *     .. External Subroutines ..
+@@ -80365,8 +80305,6 @@
+       EXTERNAL           DAXPY, DCOPY, DGEMV, DGER
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -80640,8 +80578,6 @@
+       INTEGER            I, INFO, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DGEMM, DTRMM, XERBLA
+@@ -80966,8 +80902,6 @@
+       EXTERNAL           DGEMV, DTRMV, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -81371,9 +81305,9 @@
+       DOUBLE PRECISION   BIGNUM, CFROM1, CFROMC, CTO1, CTOC, MUL, SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
++      LOGICAL            DISNAN
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH, DISNAN
++      EXTERNAL           DLAMCH, DISNAN
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          ABS, MAX, MIN
+@@ -86845,8 +86779,6 @@
+       EXTERNAL           DBDSQR, DLARTG, DLASR, DSWAP, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX
+@@ -87320,8 +87252,6 @@
+       INTEGER            I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MIN
+@@ -89912,8 +89842,6 @@
+       DOUBLE PRECISION   CTEMP, STEMP, TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -90240,8 +90168,6 @@
+       INTEGER            STACK( 2, 32 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -91788,9 +91714,8 @@
+      $                   ROWMAX, T
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+-      EXTERNAL           LSAME, IDAMAX
++      EXTERNAL           IDAMAX
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DGEMM, DGEMV, DSCAL, DSWAP
+@@ -92674,10 +92599,9 @@
+      $                   TMAX, TSCAL, USCAL, XBND, XJ, XMAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DASUM, DDOT, DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DASUM, DDOT, DLAMCH
++      EXTERNAL           IDAMAX, DASUM, DDOT, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DSCAL, DTBSV, XERBLA
+@@ -93796,10 +93720,9 @@
+      $                   TMAX, TSCAL, USCAL, XBND, XJ, XMAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DASUM, DDOT, DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DASUM, DDOT, DLAMCH
++      EXTERNAL           IDAMAX, DASUM, DDOT, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DSCAL, DTPSV, XERBLA
+@@ -94560,9 +94483,8 @@
+       EXTERNAL           DAXPY, DGEMV, DLARFG, DSCAL, DSYMV
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MIN
+@@ -94936,10 +94858,9 @@
+      $                   TMAX, TSCAL, USCAL, XBND, XJ, XMAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DASUM, DDOT, DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DASUM, DDOT, DLAMCH
++      EXTERNAL           IDAMAX, DASUM, DDOT, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DSCAL, DTRSV, XERBLA
+@@ -95833,8 +95754,6 @@
+       EXTERNAL           DAXPY, DCOPY, DGEMV, DGER
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MIN
+@@ -96006,9 +95925,8 @@
+       DOUBLE PRECISION   AII
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DSCAL, XERBLA
+@@ -96203,9 +96121,8 @@
+       INTEGER            I, IB, NB
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMM, DLAUU2, DSYRK, DTRMM, XERBLA
+@@ -96433,8 +96350,6 @@
+       INTEGER            I, IINFO, IJ, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DORG2L, DORG2R, XERBLA
+@@ -96702,8 +96617,6 @@
+       DOUBLE PRECISION   AII
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARF, XERBLA
+@@ -97188,8 +97101,7 @@
+ *     ..
+ *     .. External Functions ..
+       DOUBLE PRECISION   DNRM2
+-      LOGICAL            LSAME
+-      EXTERNAL           DNRM2, LSAME
++      EXTERNAL           DNRM2
+ *     ..
+ *     .. Intrinsic Functions
+       INTRINSIC          ATAN2, COS, MAX, SIN
+@@ -97897,8 +97809,6 @@
+      $                   DORBDB, DORGLQ, DORGQR, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Intrinsic Functions
+       INTRINSIC          INT, MAX, MIN
+@@ -98748,8 +98658,6 @@
+       INTEGER            I, IINFO, J, LWKOPT, MN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DORGLQ, DORGQR, XERBLA
+@@ -100868,9 +100776,8 @@
+       INTEGER            I, IINFO, J, LWKOPT, NB
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DORGQL, DORGQR, XERBLA
+@@ -101160,8 +101067,6 @@
+       DOUBLE PRECISION   AII
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARF, XERBLA
+@@ -101438,8 +101343,6 @@
+       DOUBLE PRECISION   AII
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARF, XERBLA
+@@ -101752,9 +101655,8 @@
+       INTEGER            I1, I2, IINFO, LWKOPT, MI, NB, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DORMLQ, DORMQR, XERBLA
+@@ -102106,9 +102008,8 @@
+       INTEGER            I1, I2, IINFO, LWKOPT, MI, NB, NH, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DORMQR, XERBLA
+@@ -102386,8 +102287,6 @@
+       DOUBLE PRECISION   AII
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARF, XERBLA
+@@ -102678,9 +102577,8 @@
+      $                   LWKOPT, MI, NB, NBMIN, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARFB, DLARFT, DORML2, XERBLA
+@@ -103024,9 +102922,8 @@
+      $                   MI, NB, NBMIN, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARFB, DLARFT, DORM2L, XERBLA
+@@ -103363,9 +103260,8 @@
+      $                   LWKOPT, MI, NB, NBMIN, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARFB, DLARFT, DORM2R, XERBLA
+@@ -103694,8 +103590,6 @@
+       DOUBLE PRECISION   AII
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARF, XERBLA
+@@ -103986,8 +103880,6 @@
+       INTEGER            I, I1, I2, I3, IC, JA, JC, MI, NI, NQ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARZ, XERBLA
+@@ -104281,9 +104173,8 @@
+      $                   MI, NB, NBMIN, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARFB, DLARFT, DORMR2, XERBLA
+@@ -104647,9 +104538,8 @@
+      $                   LDWORK, LWKOPT, MI, NB, NBMIN, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLARZB, DLARZT, DORMR3, XERBLA
+@@ -105004,9 +104894,8 @@
+       INTEGER            I1, I2, IINFO, LWKOPT, MI, NB, NI, NQ, NW
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DORMQL, DORMQR, XERBLA
+@@ -105286,10 +105175,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DLAMCH
++      EXTERNAL           IDAMAX, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DLATBS, DRSCL, XERBLA
+@@ -105549,8 +105437,6 @@
+       DOUBLE PRECISION   SMIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -105869,9 +105755,8 @@
+       INTRINSIC          ABS, MAX, MIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -106256,8 +106141,6 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSYR, XERBLA
+@@ -106578,8 +106461,6 @@
+ *  =====================================================================
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPBTRF, DPBTRS, XERBLA
+@@ -106999,9 +106880,8 @@
+       DOUBLE PRECISION   AMAX, ANORM, BIGNUM, SCOND, SMAX, SMIN, SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSB
+-      EXTERNAL           LSAME, DLAMCH, DLANSB
++      EXTERNAL           DLAMCH, DLANSB
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DLACPY, DLAQSB, DPBCON, DPBEQU, DPBRFS,
+@@ -107339,8 +107219,6 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSYR, XERBLA
+@@ -107605,9 +107483,8 @@
+       DOUBLE PRECISION   WORK( LDWORK, NBMAX )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMM, DPBTF2, DPOTF2, DSYRK, DTRSM, XERBLA
+@@ -108011,8 +107888,6 @@
+       INTEGER            J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DTBSV, XERBLA
+@@ -108311,8 +108186,6 @@
+       INTEGER            N1, N2, K
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, DSYRK, DPOTRF, DTRSM
+@@ -108761,8 +108634,6 @@
+       INTEGER            N1, N2, K
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, DTFTRI, DLAUUM, DTRMM, DSYRK
+@@ -109192,8 +109063,6 @@
+       LOGICAL            LOWER, NORMALTRANSR
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, DTFSM
+@@ -109402,10 +109271,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DLAMCH
++      EXTERNAL           IDAMAX, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DLATRS, DRSCL, XERBLA
+@@ -110156,9 +110024,8 @@
+       INTRINSIC          ABS, MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -110505,8 +110372,6 @@
+ *  =====================================================================
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPOTRF, DPOTRS, XERBLA
+@@ -110888,9 +110753,8 @@
+       DOUBLE PRECISION   AMAX, ANORM, BIGNUM, SCOND, SMAX, SMIN, SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSY
+-      EXTERNAL           LSAME, DLAMCH, DLANSY
++      EXTERNAL           DLAMCH, DLANSY
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACPY, DLAQSY, DPOCON, DPOEQU, DPORFS, DPOTRF,
+@@ -111180,9 +111044,9 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
++      LOGICAL            DISNAN
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT, DISNAN
++      EXTERNAL           DDOT, DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DSCAL, XERBLA
+@@ -111407,9 +111271,8 @@
+       INTEGER            J, JB, NB
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMM, DPOTRF2, DSYRK, DTRSM, XERBLA
+@@ -111652,8 +111515,8 @@
+       INTEGER            N1, N2, IINFO
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSYRK, DTRSM, XERBLA
+@@ -111870,8 +111733,6 @@
+ *  =====================================================================
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLAUUM, DTRTRI, XERBLA
+@@ -112051,8 +111912,6 @@
+       LOGICAL            UPPER
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DTRSM, XERBLA
+@@ -112271,10 +112130,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DLAMCH
++      EXTERNAL           IDAMAX, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DLATPS, DRSCL, XERBLA
+@@ -112512,8 +112370,6 @@
+       DOUBLE PRECISION   SMIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -112823,9 +112679,8 @@
+       INTRINSIC          ABS, MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -113189,8 +113044,6 @@
+ *  =====================================================================
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPPTRF, DPPTRS, XERBLA
+@@ -113573,9 +113426,8 @@
+       DOUBLE PRECISION   AMAX, ANORM, BIGNUM, SCOND, SMAX, SMIN, SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSP
+-      EXTERNAL           LSAME, DLAMCH, DLANSP
++      EXTERNAL           DLAMCH, DLANSP
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DLACPY, DLAQSP, DPPCON, DPPEQU, DPPRFS,
+@@ -113871,9 +113723,8 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSPR, DTPSV, XERBLA
+@@ -114085,9 +113936,8 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSPR, DTPMV, DTPTRI, XERBLA
+@@ -114283,8 +114133,6 @@
+       INTEGER            I
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DTPSV, XERBLA
+@@ -114527,8 +114375,8 @@
+ *     ..
+ *     .. External Functions ..
+       DOUBLE PRECISION   DLAMCH
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           DLAMCH, LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DLAMCH, DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DSCAL, DSWAP, XERBLA
+@@ -114915,8 +114763,8 @@
+ *     .. External Functions ..
+       DOUBLE PRECISION   DLAMCH
+       INTEGER            ILAENV
+-      LOGICAL            LSAME, DISNAN
+-      EXTERNAL           DLAMCH, ILAENV, LSAME, DISNAN
++      LOGICAL            DISNAN
++      EXTERNAL           DLAMCH, ILAENV, DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DPSTF2, DSCAL, DSWAP, DSYRK, XERBLA
+@@ -115575,8 +115423,6 @@
+       PARAMETER          ( ZERO = 0.0D0, ONE = 1.0D0 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DBDSQR, DLASET, DPTTRF, XERBLA
+@@ -116488,9 +116334,8 @@
+       DOUBLE PRECISION   ANORM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, DLAMCH, DLANST
++      EXTERNAL           DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DLACPY, DPTCON, DPTRFS, DPTTRF, DPTTRS,
+@@ -117466,9 +117311,8 @@
+      $                   SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSB
+-      EXTERNAL           LSAME, DLAMCH, DLANSB
++      EXTERNAL           DLAMCH, DLANSB
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASCL, DSBTRD, DSCAL, DSTEQR, DSTERF, XERBLA
+@@ -117802,9 +117646,8 @@
+      $                   SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSB
+-      EXTERNAL           LSAME, DLAMCH, DLANSB
++      EXTERNAL           DLAMCH, DLANSB
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMM, DLACPY, DLASCL, DSBTRD, DSCAL, DSTEDC,
+@@ -118238,9 +118081,8 @@
+      $                   SIGMA, SMLNUM, TMP1, VLL, VUU
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSB
+-      EXTERNAL           LSAME, DLAMCH, DLANSB
++      EXTERNAL           DLAMCH, DLANSB
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DGEMV, DLACPY, DLASCL, DSBTRD, DSCAL,
+@@ -118670,8 +118512,6 @@
+       DOUBLE PRECISION   BII, RA, RA1, T
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGER, DLAR2V, DLARGV, DLARTG, DLARTV, DLASET,
+@@ -120117,8 +119957,6 @@
+       INTEGER            IINFO, INDE, INDWRK
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPBSTF, DSBGST, DSBTRD, DSTEQR, DSTERF, XERBLA
+@@ -120453,8 +120291,6 @@
+      $                   LWMIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMM, DLACPY, DPBSTF, DSBGST, DSBTRD, DSTEDC,
+@@ -120895,8 +120731,6 @@
+       DOUBLE PRECISION   TMP1
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DGEMV, DLACPY, DPBSTF, DSBGST, DSBTRD,
+@@ -121290,8 +121124,6 @@
+       INTRINSIC          MAX, MIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -121925,8 +121757,6 @@
+       INTEGER            INFO, NROWA, J, NK, N1, N2
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, DGEMM, DSYRK
+@@ -122432,8 +122262,6 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DSPTRS, XERBLA
+@@ -122671,9 +122499,8 @@
+      $                   SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSP
+-      EXTERNAL           LSAME, DLAMCH, DLANSP
++      EXTERNAL           DLAMCH, DLANSP
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DOPGTR, DSCAL, DSPTRD, DSTEQR, DSTERF, XERBLA
+@@ -122983,9 +122810,8 @@
+      $                   SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSP
+-      EXTERNAL           LSAME, DLAMCH, DLANSP
++      EXTERNAL           DLAMCH, DLANSP
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DOPMTR, DSCAL, DSPTRD, DSTEDC, DSTERF, XERBLA
+@@ -123379,9 +123205,8 @@
+      $                   SIGMA, SMLNUM, TMP1, VLL, VUU
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSP
+-      EXTERNAL           LSAME, DLAMCH, DLANSP
++      EXTERNAL           DLAMCH, DLANSP
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DOPGTR, DOPMTR, DSCAL, DSPTRD, DSTEBZ,
+@@ -123752,9 +123577,8 @@
+      $                   XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -124066,8 +123890,6 @@
+       INTEGER            J, NEIG
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPPTRF, DSPEV, DSPGST, DTPMV, DTPSV, XERBLA
+@@ -124394,8 +124216,6 @@
+       INTEGER            J, LIWMIN, LWMIN, NEIG
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPPTRF, DSPEVD, DSPGST, DTPMV, DTPSV, XERBLA
+@@ -124821,8 +124641,6 @@
+       INTEGER            J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPPTRF, DSPEVX, DSPGST, DTPMV, DTPSV, XERBLA
+@@ -125165,9 +124983,8 @@
+       INTRINSIC          ABS, MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -125552,8 +125369,6 @@
+ *  =====================================================================
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSPTRF, DSPTRS, XERBLA
+@@ -125900,9 +125715,8 @@
+       DOUBLE PRECISION   ANORM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANSP
+-      EXTERNAL           LSAME, DLAMCH, DLANSP
++      EXTERNAL           DLAMCH, DLANSP
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DLACPY, DSPCON, DSPRFS, DSPTRF, DSPTRS,
+@@ -126161,9 +125975,8 @@
+       EXTERNAL           DAXPY, DLARFG, DSPMV, DSPR2, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -126471,9 +126284,8 @@
+      $                   ROWMAX, T, WK, WKM1, WKP1
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+-      EXTERNAL           LSAME, IDAMAX
++      EXTERNAL           IDAMAX
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSPR, DSWAP, XERBLA
+@@ -127033,9 +126845,8 @@
+       DOUBLE PRECISION   AK, AKKP1, AKP1, D, T, TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DSPMV, DSWAP, XERBLA
+@@ -127440,8 +127251,6 @@
+       DOUBLE PRECISION   AK, AKM1, AKM1K, BK, BKM1, DENOM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DGER, DSCAL, DSWAP, XERBLA
+@@ -128059,10 +127868,9 @@
+       INTEGER            IDUMMA( 1 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, ILAENV, DLAMCH
++      EXTERNAL           ILAENV, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLAEBZ, XERBLA
+@@ -128735,10 +128543,9 @@
+       DOUBLE PRECISION   EPS, ORGNRM, P, TINY
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANST
++      EXTERNAL           ILAENV, DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMM, DLACPY, DLAED0, DLASCL, DLASET, DLASRT,
+@@ -130116,9 +129923,8 @@
+ *     ..
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, DLAMCH, DLANST
++      EXTERNAL           DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DLAE2, DLAEV2, DLARRC, DLARRE, DLARRJ,
+@@ -130695,9 +130501,8 @@
+      $                   S, SAFMAX, SAFMIN, SSFMAX, SSFMIN, TST
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANST, DLAPY2
+-      EXTERNAL           LSAME, DLAMCH, DLANST, DLAPY2
++      EXTERNAL           DLAMCH, DLANST, DLAPY2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLAE2, DLAEV2, DLARTG, DLASCL, DLASET, DLASR,
+@@ -131674,9 +131479,8 @@
+      $                   TNRM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, DLAMCH, DLANST
++      EXTERNAL           DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSTEQR, DSTERF, XERBLA
+@@ -131957,9 +131761,8 @@
+      $                   TNRM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, DLAMCH, DLANST
++      EXTERNAL           DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSTEDC, DSTERF, XERBLA
+@@ -132405,10 +132208,9 @@
+      $                   TMP1, TNRM, VLL, VUU
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANST
++      EXTERNAL           ILAENV, DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DSCAL, DSTEBZ, DSTEMR, DSTEIN, DSTERF,
+@@ -132910,9 +132712,8 @@
+      $                   TMP1, TNRM, VLL, VUU
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH, DLANST
+-      EXTERNAL           LSAME, DLAMCH, DLANST
++      EXTERNAL           DLAMCH, DLANST
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DSCAL, DSTEBZ, DSTEIN, DSTEQR, DSTERF,
+@@ -133277,8 +133078,6 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DSYTRS, XERBLA
+@@ -133496,8 +133295,6 @@
+       PARAMETER          ( ZERO = 0.0D+0 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -133888,8 +133685,7 @@
+ *     ..
+ *     .. External Functions ..
+       DOUBLE PRECISION   DLAMCH
+-      LOGICAL            LSAME
+-      EXTERNAL           DLAMCH, LSAME
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASSQ, XERBLA
+@@ -134220,10 +134016,9 @@
+      $                   SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANSY
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANSY
++      EXTERNAL           ILAENV, DLAMCH, DLANSY
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASCL, DORGTR, DSCAL, DSTEQR, DSTERF, DSYTRD,
+@@ -134561,10 +134356,9 @@
+      $                   SMLNUM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANSY
+-      EXTERNAL           LSAME, DLAMCH, DLANSY, ILAENV
++      EXTERNAL           DLAMCH, DLANSY, ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACPY, DLASCL, DORMTR, DSCAL, DSTEDC, DSTERF,
+@@ -135071,10 +134865,9 @@
+      $                   SIGMA, SMLNUM, TMP1, VLL, VUU
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANSY
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANSY
++      EXTERNAL           ILAENV, DLAMCH, DLANSY
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DORMTR, DSCAL, DSTEBZ, DSTEMR, DSTEIN,
+@@ -135671,10 +135464,9 @@
+      $                   SIGMA, SMLNUM, TMP1, VLL, VUU
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANSY
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANSY
++      EXTERNAL           ILAENV, DLAMCH, DLANSY
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DLACPY, DORGTR, DORMTR, DSCAL, DSTEBZ,
+@@ -136097,8 +135889,6 @@
+       INTRINSIC          MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -136379,9 +136169,8 @@
+       INTRINSIC          MAX, MIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -136743,9 +136532,8 @@
+       INTEGER            LWKMIN, LWKOPT, NB, NEIG
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPOTRF, DSYEV, DSYGST, DTRMM, DTRSM, XERBLA
+@@ -137110,8 +136898,6 @@
+       INTEGER            LIOPT, LIWMIN, LOPT, LWMIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPOTRF, DSYEVD, DSYGST, DTRMM, DTRSM, XERBLA
+@@ -137562,9 +137348,8 @@
+       INTEGER            LWKMIN, LWKOPT, NB
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DPOTRF, DSYEVX, DSYGST, DTRMM, DTRSM, XERBLA
+@@ -137937,9 +137722,8 @@
+       INTRINSIC          ABS, MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -138335,8 +138119,6 @@
+       INTEGER            LWKOPT
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, DSYTRF, DSYTRS, DSYTRS2
+@@ -138725,10 +138507,9 @@
+       DOUBLE PRECISION   ANORM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+       DOUBLE PRECISION   DLAMCH, DLANSY
+-      EXTERNAL           LSAME, ILAENV, DLAMCH, DLANSY
++      EXTERNAL           ILAENV, DLAMCH, DLANSY
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACPY, DSYCON, DSYRFS, DSYTRF, DSYTRS, XERBLA
+@@ -138952,8 +138733,6 @@
+       DOUBLE PRECISION   TMP
+ *
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL         DSWAP
+@@ -139224,9 +139003,8 @@
+       EXTERNAL           DAXPY, DLARFG, DSYMV, DSYR2, XERBLA
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, MIN
+@@ -139568,9 +139346,9 @@
+      $                   ROWMAX, T, WK, WKM1, WKP1
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME, DISNAN
++      LOGICAL            DISNAN
+       INTEGER            IDAMAX
+-      EXTERNAL           LSAME, IDAMAX, DISNAN
++      EXTERNAL           IDAMAX, DISNAN
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSWAP, DSYR, XERBLA
+@@ -140179,9 +139957,8 @@
+       INTRINSIC          MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -140534,9 +140311,8 @@
+       INTEGER            IINFO, IWS, J, K, KB, LDWORK, LWKOPT, NB, NBMIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLASYF, DSYTF2, XERBLA
+@@ -140834,9 +140610,8 @@
+       DOUBLE PRECISION   AK, AKKP1, AKP1, D, T, TEMP
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT
+-      EXTERNAL           LSAME, DDOT
++      EXTERNAL           DDOT
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DSWAP, DSYMV, XERBLA
+@@ -141224,9 +140999,8 @@
+       INTEGER            MINSIZE, NBMAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSYTRI, DSYTRI2X, XERBLA
+@@ -141432,8 +141206,6 @@
+       DOUBLE PRECISION   U11_I_J, U11_IP1_J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSYCONV, XERBLA, DTRTRI
+@@ -142018,8 +141790,6 @@
+       DOUBLE PRECISION   AK, AKM1, AKM1K, BK, BKM1, DENOM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DGER, DSCAL, DSWAP, XERBLA
+@@ -142475,8 +142245,6 @@
+       DOUBLE PRECISION   AK, AKM1, AKM1K, BK, BKM1, DENOM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DSYCONV, DSWAP, DTRSM, XERBLA
+@@ -142852,10 +142620,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DLAMCH, DLANTB
+-      EXTERNAL           LSAME, IDAMAX, DLAMCH, DLANTB
++      EXTERNAL           IDAMAX, DLAMCH, DLANTB
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DLATBS, DRSCL, XERBLA
+@@ -143189,9 +142956,8 @@
+       INTRINSIC          ABS, MAX, MIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -143617,8 +143383,6 @@
+       INTEGER            J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DTBSV, XERBLA
+@@ -143995,8 +143759,6 @@
+       INTEGER            M1, M2, N1, N2, K, INFO, I, J
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, DGEMM, DTRSM
+@@ -144922,8 +144684,6 @@
+       INTEGER            N1, N2, K
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA, DTRMM, DTRTRI
+@@ -145380,8 +145140,6 @@
+       INTEGER            IJP, JP, LDA, JS
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -145904,8 +145662,6 @@
+       INTEGER            I, J, L, IJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -146516,9 +146272,8 @@
+      $                   SUMP( 2, 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DLABAD, DLACPY, DLAG2, DLALN2, XERBLA
+@@ -149909,8 +149664,6 @@
+      $                   GAMMA, RWK, SNQ, SNU, SNV, SSMIN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DCOPY, DLAGS2, DLAPLL, DLARTG, DLASET, DROT,
+@@ -150571,9 +150324,8 @@
+       DOUBLE PRECISION   DUMMY( 1 ), DUMMY1( 1 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT, DLAMCH, DLAPY2, DNRM2
+-      EXTERNAL           LSAME, DDOT, DLAMCH, DLAPY2, DNRM2
++      EXTERNAL           DDOT, DLAMCH, DLAPY2, DNRM2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMV, DLACPY, DLAG2, DTGEXC, DTGSYL, XERBLA
+@@ -151165,8 +150917,6 @@
+       DOUBLE PRECISION   RHS( LDZ ), Z( LDZ, LDZ )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DCOPY, DGEMM, DGEMV, DGER, DGESC2,
+@@ -152260,9 +152010,8 @@
+       DOUBLE PRECISION   DSCALE, DSUM, SCALE2, SCALOC
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DGEMM, DLACPY, DLASET, DSCAL, DTGSY2, XERBLA
+@@ -152771,10 +152520,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DLAMCH, DLANTP
+-      EXTERNAL           LSAME, IDAMAX, DLAMCH, DLANTP
++      EXTERNAL           IDAMAX, DLAMCH, DLANTP
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DLATPS, DRSCL, XERBLA
+@@ -153115,8 +152863,6 @@
+       INTEGER            I, IB, MB, LB, KF, LDAQ, LDVQ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DTPRFB, XERBLA
+@@ -154092,10 +153838,6 @@
+       INTEGER   I, J, MP, NP, KP
+       LOGICAL   LEFT, FORWARD, COLUMN, RIGHT, BACKWARD, ROW
+ *     ..
+-*     .. External Functions ..
+-      LOGICAL   LSAME
+-      EXTERNAL  LSAME
+-*     ..
+ *     .. External Subroutines ..
+       EXTERNAL  DGEMM, DTRMM
+ *     ..
+@@ -154842,9 +154584,8 @@
+       INTRINSIC          ABS, MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -155243,8 +154984,6 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DTPMV, XERBLA
+@@ -155496,8 +155235,6 @@
+       INTEGER            J, JC
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DTPSV, XERBLA
+@@ -155779,8 +155516,6 @@
+       INTEGER            IJP, JP, LDA, JS
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -156198,8 +155933,6 @@
+       INTEGER            I, J, K
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -156416,10 +156149,9 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DLAMCH, DLANTR
+-      EXTERNAL           LSAME, IDAMAX, DLAMCH, DLANTR
++      EXTERNAL           IDAMAX, DLAMCH, DLANTR
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DLATRS, DRSCL, XERBLA
+@@ -156775,10 +156507,9 @@
+      $                   XNORM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX
+       DOUBLE PRECISION   DDOT, DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, DDOT, DLAMCH
++      EXTERNAL           IDAMAX, DDOT, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLABAD, DAXPY, DCOPY, DGEMV, DLALN2, DSCAL,
+@@ -157874,10 +157605,9 @@
+      $                   XNORM
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            IDAMAX, ILAENV
+       DOUBLE PRECISION   DDOT, DLAMCH
+-      EXTERNAL           LSAME, IDAMAX, ILAENV, DDOT, DLAMCH
++      EXTERNAL           IDAMAX, ILAENV, DDOT, DLAMCH
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DAXPY, DCOPY, DGEMV, DLALN2, DSCAL, XERBLA,
+@@ -159077,8 +158807,6 @@
+       INTEGER            HERE, NBF, NBL, NBNEXT
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLAEXC, XERBLA
+@@ -159554,9 +159282,8 @@
+       INTRINSIC          ABS, MAX
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLAMCH
+-      EXTERNAL           LSAME, DLAMCH
++      EXTERNAL           DLAMCH
+ *     ..
+ *     .. Executable Statements ..
+ *
+@@ -160152,9 +159879,8 @@
+       INTEGER            ISAVE( 3 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DLANGE
+-      EXTERNAL           LSAME, DLANGE
++      EXTERNAL           DLANGE
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLACN2, DLACPY, DTREXC, DTRSYL, XERBLA
+@@ -160673,9 +160399,8 @@
+       DOUBLE PRECISION   DUMMY( 1 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT, DLAMCH, DLAPY2, DNRM2
+-      EXTERNAL           LSAME, DDOT, DLAMCH, DLAPY2, DNRM2
++      EXTERNAL           DDOT, DLAMCH, DLAPY2, DNRM2
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLABAD, DLACN2, DLACPY, DLAQTR, DTREXC, XERBLA
+@@ -161172,9 +160897,8 @@
+       DOUBLE PRECISION   DUM( 1 ), VEC( 2, 2 ), X( 2, 2 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       DOUBLE PRECISION   DDOT, DLAMCH, DLANGE
+-      EXTERNAL           LSAME, DDOT, DLAMCH, DLANGE
++      EXTERNAL           DDOT, DLAMCH, DLANGE
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DLABAD, DLALN2, DLASY2, DSCAL, XERBLA
+@@ -162115,8 +161839,6 @@
+       DOUBLE PRECISION   AJJ
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DSCAL, DTRMV, XERBLA
+@@ -162325,9 +162047,8 @@
+       INTEGER            J, JB, NB, NN
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+       INTEGER            ILAENV
+-      EXTERNAL           LSAME, ILAENV
++      EXTERNAL           ILAENV
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DTRMM, DTRSM, DTRTI2, XERBLA
+@@ -162597,8 +162318,6 @@
+       LOGICAL            NOUNIT
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           DTRSM, XERBLA
+@@ -162875,8 +162594,6 @@
+       INTEGER            I, IJ, J, K, L, N1, N2, NT, NX2, NP1X2
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -163278,8 +162995,6 @@
+       INTEGER            I, J, K
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+       EXTERNAL           XERBLA
+@@ -165109,8 +164824,6 @@
+      $     BLAS_PREC_INDIGENOUS = 213, BLAS_PREC_EXTRA = 214 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+       IF( LSAME( PREC, 'S' ) ) THEN
+@@ -165206,8 +164919,6 @@
+      $     BLAS_CONJ_TRANS = 113 )
+ *     ..
+ *     .. External Functions ..
+-      LOGICAL            LSAME
+-      EXTERNAL           LSAME
+ *     ..
+ *     .. Executable Statements ..
+       IF( LSAME( TRANS, 'N' ) ) THEN
+@@ -165275,7 +164986,7 @@
+ *> \ingroup auxOTHERauxiliary
+ *
+ *  =====================================================================
+-      SUBROUTINE ILAVER( VERS_MAJOR, VERS_MINOR, VERS_PATCH )
++      SUBROUTINE ILAVER( VERS_MAJOR, VERS_MINOR, VERS_PATCH ) BIND(C)
+ *
+ *  -- LAPACK computational routine --
+ *  -- LAPACK is a software package provided by Univ. of Tennessee,    --
+@@ -166083,3 +165794,5 @@
+ *     ==== End of IPARMQ ====
+ *
+       END
++
++      END MODULE
+-- 
+2.31.0
+
